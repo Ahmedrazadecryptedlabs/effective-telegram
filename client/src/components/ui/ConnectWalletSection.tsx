@@ -5,18 +5,21 @@ interface ConnectWalletSectionProps {
   tabs: { id: string; label: string }[]; // Array of tab objects with id and label
   defaultActiveTab?: string; // Default active tab
   showCancelAll?: boolean; // Whether to show the "Cancel All" button section
+  headerTop?: boolean; // Whether to show the top header section
 }
 
 const ConnectWalletSection: React.FC<ConnectWalletSectionProps> = ({
   tabs,
   defaultActiveTab = "openOrders",
   showCancelAll = true,
+  headerTop  = false 
 }) => {
   const [activeTab, setActiveTab] = useState(defaultActiveTab);
 
   return (
     <div className="my-4">
       {/* Top Section: Tabs and Buttons */}
+     { headerTop && (
       <div className="flex flex-wrap items-center justify-between rounded-lg w-full my-2">
         {/* Left Tab Navigation */}
         <div className="flex space-x-2 sm:space-x-3 items-center mb-2 sm:mb-0">
@@ -62,7 +65,7 @@ const ConnectWalletSection: React.FC<ConnectWalletSectionProps> = ({
             )}
           </div>
         
-      </div>
+      </div> )}
 
       {/* Bottom Section */}
       <div className="flex h-[200px] w-full flex-col items-center justify-center space-y-2 rounded-lg border border-v2-lily/5 mt-3">

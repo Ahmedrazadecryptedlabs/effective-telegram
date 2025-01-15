@@ -73,8 +73,6 @@ export default function SpotTradeSection() {
   const [showConnectWallet, setShowConnectWallet] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
   const getJupiterQuote = async (
     fromToken: Token,
     toToken: Token,
@@ -460,10 +458,40 @@ export default function SpotTradeSection() {
         return null;
     }
   };
-  const tabs2 = [
-    { id: "openOrders", label: "Open Orders" },
-    { id: "orderHistory", label: "Order History" },
-  ];
+
+  const tabStates = {
+    Swap: { showCancelAll: false, additionalProp: "swap-specific-data" },
+    Limit: {
+      showCancelAll: true,
+      additionalProp: "limit-specific-data",
+      tabs: [
+        { id: "openOrders", label: "Open Orders" },
+        { id: "Open Orders", label: "openOrders" },
+      ],
+      headerTop: true,
+    },
+    DCA: {
+      showCancelAll: false,
+      additionalProp: "dca-specific-data",
+      tabs: [
+        { id: "Active DCAs", label: "Past DCAs" },
+        { id: "Past DCAs", label: "Active DCAs" },
+      ],
+      headerTop: true,
+    },
+    VA: {
+      showCancelAll: true,
+      additionalProp: "va-specific-data",
+      tabs: [
+        { id: "Active VAs", label: "Past VAs" },
+        { id: "Past VAs", label: "Active VAs" },
+      ],
+      headerTop: true,
+    },
+  };
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+  };
 
   return (
     <div className="mt-12 p-0 sm:p-4">
@@ -483,12 +511,11 @@ export default function SpotTradeSection() {
     w-[55%]`} // Keep a fixed width so tabs don't move
           >
             <div className="bg-gray-900 rounded-2xl overflow-hidden">
-            {/* <TradingViewChartCard
+              {/* <TradingViewChartCard
         baseToken={sellCurrency}
         quoteToken={buyCurrency}
       /> */}
 
-       
               <iframe
                 src="https://www.tradingview.com/widgetembed/?theme=dark"
                 frameBorder="0"
@@ -503,7 +530,10 @@ export default function SpotTradeSection() {
                     : "opacity-0 pointer-events-none"
                 }`}
               >
-                <ConnectWalletSection tabs={tabs2} showCancelAll={false} />
+                <ConnectWalletSection
+                  tabs={[activeTab]} // Pass the current tab as a prop
+                  {...tabStates[activeTab]} // Spread unique states for the active tab
+                />
               </div>
             )}
           </div>
@@ -570,15 +600,15 @@ export default function SpotTradeSection() {
       </button>
 
       {/* TokenSelectModal usage */}
-      {/* <TokenSelectModal isOpen={isModalOpen} onClose={closeModal} /> */} 
+      {/* <TokenSelectModal isOpen={isModalOpen} onClose={closeModal} /> */}
 
       {modalOpen && (
         <Modal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        tokenList={tokenList}
-        onTokenSelect={handleTokenSelection} // <--- capture the selected token
-      />
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          tokenList={tokenList}
+          onTokenSelect={handleTokenSelection} // <--- capture the selected token
+        />
       )}
     </div>
   );
