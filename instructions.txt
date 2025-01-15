@@ -1,0 +1,56 @@
+
+
+Account 5 : (By which we will swap tokens)
+    address : HmTeeWsanXVEqZHWvqJqVyuMTnFRgEtChLdWSAR7pFRi 
+
+
+
+
+
+
+Account 6 : (Platform fee will be claimed)
+    address : 9H3j5eoxYRpTxbA34WypTFgmisjKuGUtjDawdM1rPYWq 
+
+    Referral Account : (Platform fee will be collected)
+    address : 3Fn9fXRqKW1o1pmXNovLwxvjSFdxxptEoZRSsJyjhtMi  //DONE 
+
+        Referral Account Token Account: (SOL So11111111111111111111111111111111111111112)
+        address :  7xu1XAfF3BCQcy5VCHT9UK1uCnKTtBSv3Ab9Dp3XKDQr //DONE funded 0.002 sol
+
+        Referral Account Token Account: (USDT Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB)
+        address :  AVxJgKiooWc2bkLJr6wosc9WN3Ra32XENbEFNBGjS3rT //DONE funded 0.002 sol
+
+        Referral Account Token Account: (USDC EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v)
+        address :  Cr8KRXKG4FFStvYBWZe24AR1SMZyLB2Hi98gG9ib8osY //DONE funded 0.002 sol
+
+ 
+
+Now, paste 
+Account address
+Referral Account address
+And platformFeeBps: 50 (0.5%) 150 (1.5%)
+ in next-client constants file 
+
+Ensure you have enough SOL in all 3 token account to pay for token account rental fees 
+
+================== Fee Distribution ==================
+
+suppose if user swap 
+10 SOL ==> USDT and user will be getting 1000 USDT and,
+
+platformFeeBps set as 50 (0.5%) then,
+
+1000 USDT ===>
+            9995 ===> 99.5% To User for now account 5 
+            5 ===> 0.5% To Jupiter Referral Fee Vault
+            These 5 USDT then splits ===> 
+                                        4.87500 ===> 97.5% to your Account 6 when claiming  
+                                        0.125 ===> 2.5% to Jupiter when claiming  
+
+Jupiter Documentaion
+https://station.jup.ag/guides/jupiter-swap/how-referral-works#jupiter-referral-program
+
+
+now we initiate swap tx 0.0001 sol to usdt
+
+
