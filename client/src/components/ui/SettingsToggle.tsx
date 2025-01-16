@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Settings, RefreshCcw, RotateCcw } from "lucide-react";
 import SwapSettingsModal from "./SwapSettingsModal";
+import { IoIosSettings  } from "react-icons/io";
+import { RxReload } from "react-icons/rx";
 
 const SettingsToggle: React.FC = () => {
   const [selectedMode, setSelectedMode] = useState<"Auto" | "Manual">("Auto");
@@ -19,7 +21,7 @@ const SettingsToggle: React.FC = () => {
       {/* Auto / Manual Toggle */}
       <div className="flex  rounded-full py-1 px-1 bg-[#18222D]">
         <button
-          className={`px-3  py-1 text-xs font-bold rounded-xl ${
+          className={`px-[12px]  py-[3px] text-xs  font-medium rounded-xl ${
             selectedMode === "Auto" ? "bg-primary/10 text-cyan-400" : "text-gray-400"
           }`}
           onClick={() => handleModeChange("Auto")}
@@ -27,7 +29,7 @@ const SettingsToggle: React.FC = () => {
           Auto
         </button>
         <button
-          className={`px-3  py-1 text-xs font-bold rounded-xl ${
+          className={` px-[12px] py-[3px] text-xs  font-medium rounded-xl ${
             selectedMode === "Manual" ? "bg-primary/10 text-cyan-400" : "text-gray-400"
           }`}
           onClick={() => handleModeChange("Manual")}
@@ -38,10 +40,10 @@ const SettingsToggle: React.FC = () => {
 
       {/* Settings Icon and Text */}
       <div className="flex items-center text-xs text-gray-400 ml-2">
-        <button className="p-2  mx-1  rounded-full bg-[#18222D]" onClick={toggleModal}>
-          <Settings size={13} className="text-v2-lily\/50" />
+        <button className="p-[6px]  mx-[2px]  rounded-full bg-[#18222D]" onClick={toggleModal}>
+          <IoIosSettings size={15} className="text-v2-lily\/50" />
         </button>
-        <span className="ml-1 text-xxs">
+        <span className="ml-[2px] mt-1 text-xxs">
           {selectedMode === "Auto" ? "Jito Only: Off" : "Fixed: 0.5%, Jito Only: Off"}
         </span>
       </div>
@@ -60,9 +62,10 @@ const SettingsToggle: React.FC = () => {
       hover:bg-[#334155]
     "
   >
-    <RotateCcw
-      size={15}
+    <RxReload
+      size={14}
       className="
+      rotate-reload-btn
         text-white 
         stroke-[0.3]               
         group-hover:stroke-2    

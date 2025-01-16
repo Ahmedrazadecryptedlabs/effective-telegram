@@ -150,7 +150,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   /* border-color: rgba(232, 249, 255, .05); */
   border: 1px solid rgba(232, 249, 255, .05);
 }
+/* Flip the icon to the left */
+.rotate-reload-btn {
+  transform: scaleX(-1); /* Flips the icon horizontally */
+color: #4B5258;
+}
 
+/* Add hover effects */
+.text-v2-lily-50 {
+  color: rgba(232, 249, 255, .5);
+}
+.text-v2-lily-30{
+  color: rgba(232, 249, 255, .3);
+}
 
 .test2{
   background-color: #22d3ee;
@@ -160,7 +172,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     color: #4F5963;
 }
 
-
+.text-gray-base{
+  color: #4E545B;
+}
 
 @layer base {
   :root {

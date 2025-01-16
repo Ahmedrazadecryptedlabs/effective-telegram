@@ -14,11 +14,11 @@ export default function SubTabs({ onSubTabChange }: { onSubTabChange: (subTab: s
 
   return (
     <div className="flex items-end justify-center bg-[#192531] h-16 w-full overflow-x-auto">
-      <div className="flex space-x-4">
+      <div className="flex space-x-4 md:space-x-8">
         {["Onramp", "USDC", "deBridge", "CEX"].map((subTab) => (
           <div
             key={subTab}
-            className={`px-4 pb-4 text-sm md:text-base font-bold cursor-pointer whitespace-nowrap ${
+            className={`px-3 pb-4 text-sm md:text-base font-bold cursor-pointer whitespace-nowrap ${
               activeSubTab.toLowerCase() === subTab.toLowerCase()
                 ? "text-cyan-400 border-b-2 border-cyan-400"
                 : "text-gray-400"

@@ -9,12 +9,23 @@ interface ConnectWalletSectionProps {
 }
 
 const ConnectWalletSection: React.FC<ConnectWalletSectionProps> = ({
-  tabs,
-  defaultActiveTab = "openOrders",
+  tabs = [], // Default to an empty array
+  defaultActiveTab = tabs[0]?.id || "", // Default to the first tab's id or an empty string
   showCancelAll = true,
-  headerTop  = false 
+  headerTop = false, 
 }) => {
   const [activeTab, setActiveTab] = useState(defaultActiveTab);
+
+  React.useEffect(() => {
+    if (tabs.length > 0) {
+      setActiveTab(defaultActiveTab); // Update activeTab only if tabs are not empty
+    }
+  }, [defaultActiveTab, tabs]);
+
+  if (!tabs.length) {
+    return <p className="text-gray-400">No tabs available</p>;
+  }
+
 
   return (
     <div className="my-4">

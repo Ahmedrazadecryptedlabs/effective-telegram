@@ -48,19 +48,19 @@ export default function SettingsModal({ isOpen, onClose }) {
 
   return (
     <div
-      className={`fixed backdrop-blur-[1.2px] inset-0 z-50 flex justify-end items-start ${
+      className={`fixed backdrop-blur-[1.3px] inset-0 z-50 flex justify-end items-start ${
         isOpen ? "block" : "hidden"
       }`}
       onClick={onClose} // Closes modal when clicking outside
     >
       {/* Modal */}
       <div
-      style={{ border: "0.1em solid #394148" }}
-        className="max-w-sm bg-[#1B2936]  mt-16 mx-4 text-white p-4 rounded-lg shadow-lg overflow-auto max-h-[90vh] w-[300px] overflow-y-auto  border border-v2-lily-10 bg-v3 px-5 py-6 text-v2-lily  lg:w-[420px]"
+        style={{ border: "0.1em solid #394148" }}
+        className=" bg-[#1B2936]  mt-[69px] mx-4 text-white p-4 rounded-lg shadow-lg overflow-auto h-[55vh] w-[400px] overflow-y-auto  border border-v2-lily-10 bg-v3 px-5 py-6 text-v2-lily  lg:w-[420px]"
         onClick={handleModalClick} // Stops click event propagation
       >
         {/* Header */}
-        <div className="text-xl font-bold mb-6">Settings</div>
+        <div className="text-xl font-bold mb-6 text-white">Settings</div>
 
         <div className="space-y-6">
           {/* Language Selector */}
@@ -116,13 +116,20 @@ export default function SettingsModal({ isOpen, onClose }) {
 
           {/* RPC Endpoint */}
           <div>
-            <p className="text-sm font-medium text-white">RPC Endpoint</p>
+            <p className="text-sm font-medium text-white mb-2">RPC Endpoint</p>
             <div>
-              {[{ label: "Triton RPC Pool 1", latency: "1,545ms" }, { label: "Helius RPC 1", latency: "957ms" }, { label: "Triton RPC Pool 2", latency: "1,963ms" }, { label: "Custom", latency: "" }].map((rpc) => (
+              {[
+                { label: "Triton RPC Pool 1", latency: "1,545ms" },
+                { label: "Helius RPC 1", latency: "957ms" },
+                { label: "Triton RPC Pool 2", latency: "1,963ms" },
+                { label: "Custom", latency: "" },
+              ].map((rpc) => (
                 <div
                   key={rpc.label}
-                  className={`w-full flex items-center justify-between ${
-                    selectedRpc === rpc.label ? "rounded-md py-2 px-2" : "py-2 cursor-pointer px-2"
+                  className={`w-full flex items-center justify-between space-y-2 ${
+                    selectedRpc === rpc.label
+                      ? "rounded-md py-2 px-[4px]"
+                      : "py-2 cursor-pointer px-[4px]"
                   }`}
                   onClick={() => setSelectedRpc(rpc.label)}
                 >
@@ -156,11 +163,14 @@ export default function SettingsModal({ isOpen, onClose }) {
                 <input
                   type="text"
                   placeholder="Custom RPC URL"
-                  className={`w-full bg-[#090C0E] border-primary rounded-lg px-3 py-3 text-sm pr-16 focus:border-none focus:outline-none focus:outline-primary ${
-                    selectedRpc !== "Custom" ? "cursor-not-allowed" : ""
+                  className={`w-full bg-[#090C0E] border-2 rounded-lg mt-3 px-3 py-3 text-sm pr-16 focus:outline-none  ${
+                    selectedRpc === "Custom"
+                      ? "border-primary text-white"
+                      : "border-gray-500 cursor-not-allowed text-gray-400"
                   }`}
                   disabled={selectedRpc !== "Custom"}
                 />
+
                 <button
                   className="absolute right-2 bg-[#292A33] text-gray-500 px-3 py-1 rounded text-xs"
                   type="button"

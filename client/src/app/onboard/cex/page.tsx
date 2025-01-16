@@ -7,49 +7,54 @@ export default function CEXPage() {
   return (
     <div className="min-h-screen flex flex-col items-center px-6 py-8">
       {/* Header Text */}
-      <h1 className="text-center text-xss md:text-sm font-semibold mb-6 text-gray-400">
+      <h1   className="text-center text-xss md:text-md font-semibold mb-6 text-gray-400">
         Transfer assets to your Solana wallet from a Centralized Exchange (CEX) <br />
         such as Binance, Coinbase, ByBit, or OKX.
       </h1>
 
       {/* Guides Buttons */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 justify-center">
+      <div className="grid  sm:grid-cols-4 gap-1 mb-6 justify-center">
         {[
           {
             name: "BINANCE",
-            url: "https://www.binance.com/en/support/faq/how-to-withdraw-crypto-from-binance-115003670492",
+            url: "/images/binance_cex.svg",
+            link : "https://www.binance.com/en/support/faq/how-to-withdraw-crypto-from-binance-115003670492"
           },
           {
             name: "coinbase",
-            url: "https://help.coinbase.com/en-gb/coinbase/trading-and-funding/buying-selling-or-converting-crypto/how-do-i-sell-or-cash-out-my-digital-currency",
+            url: "/images/coinbase_cex.svg",
+            link : "https://help.coinbase.com/en-gb/coinbase/trading-and-funding/buying-selling-or-converting-crypto/how-do-i-sell-or-cash-out-my-digital-currency"
           },
           {
             name: "BYBIT",
-            url: "https://www.bybit.com/en/help-center/article/How-to-submit-on-chain-withdrawal-request",
+            url: "/images/bybit.svg",
+            link : "https://www.bybit.com/en/help-center/article/How-to-submit-on-chain-withdrawal-request"
           },
           {
             name: "OKX",
-            url: "https://www.okx.com/help/how-do-i-make-a-withdrawal-app#on-chain-withdrawal",
+            url: "/images/okx.svg",
+            link : "https://www.okx.com/help/how-do-i-make-a-withdrawal-app#on-chain-withdrawal"
           },
         ].map((item) => (
           <a
             key={item.name}
-            href={item.url}
+            href={item.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex flex-col items-center justify-center w-32 h-20 bg-v2-background-dark text-white text-md font-medium rounded-lg shadow-md transition"
+            className="flex flex-col items-center justify-center px-[28px] py-3  bg-v2-background-dark text-white text-md font-medium rounded-lg shadow-md transition"
           >
-            <span className="mb-1">{item.name}</span>
-            <div className="text-gray-400 flex items-center text-sm">
-              Read Guide <ExternalLink className="ml-2" size={"12px"} />
+            <img  className="w-18 h-18" src={item.url} alt="" />
+          
+            <div className="text-gray-400 flex items-center text-sm mt-4">
+              <span className="text-xs" >Read Guide</span> <ExternalLink  className="ml-1" size={"12px"} />
             </div>
           </a>
         ))}
       </div>
 
       {/* Steps Box */}
-      <div className="bg-v2-background-dark rounded-lg shadow-lg p-6 w-full max-w-xl">
-        <h2 className="text-lg text-white font-bold mb-4">
+      <div className="  bg-v2-background-dark rounded-2xl shadow-2xl p-6 w-full max-w-[600px]">
+        <h2 className="text-lg text-white font-semibold mb-4">
           How to bridge assets into Solana from a CEX
         </h2>
 

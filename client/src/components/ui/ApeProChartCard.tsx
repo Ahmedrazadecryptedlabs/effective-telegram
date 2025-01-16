@@ -6,6 +6,8 @@ import {
   Settings,
   ChevronsDownUp,
   Activity,
+  ArrowRightLeft,
+  ExternalLink,
 } from "lucide-react";
 import TradingViewWidget from "./TradingViewWidget";
 
@@ -91,6 +93,8 @@ export default function TradingViewChartCard({
   baseToken,
   quoteToken,
 }: TradingViewChartCardProps) {
+  console.log("🚀 ~ quoteToken:", quoteToken)
+  console.log("🚀 ~ baseToken:", baseToken)
   // We can store the fetched price
   const [price, setPrice] = useState<number | null>(null);
   const [loadingPrice, setLoadingPrice] = useState(false);
@@ -167,11 +171,11 @@ export default function TradingViewChartCard({
   else if (price !== null) priceDisplay = price.toFixed(3);
 
   return (
-    <div className="bg-[#192230] rounded-2xl p-4 text-white">
+    <div className="bg-[#131B24] rounded-2xl pt-1 text-white">
       {/* Top row: tokens + addresses */}
-      <div className="flex items-center justify-between pb-2">
+      <div   style={{"borderBottom" :"2px solid  #1E272F"}}   className="px-4 py-1 flex items-center justify-between ">
         {/* Left side: token icons + pair name */}
-        <div className="flex items-center space-x-2">
+        <div   className="flex items-center space-x-2">
           <div className="relative flex items-center">
             <img
               src={baseImg}
@@ -184,97 +188,62 @@ export default function TradingViewChartCard({
               className="w-7 h-7 rounded-full border-2 border-[#192230]"
             />
           </div>
-          <span className="font-semibold text-lg">
-            {baseSym} / {quoteSym}
+          <span className="font-semibold text-md">
+            {baseSym} <span className="text-[#535E66]" >/</span> {quoteSym}
           </span>
-          <span className="text-gray-400 text-sm">=</span>
+          <span className="text-sm"><ArrowRightLeft className="text-[#535E66]" size={11} /></span>
         </div>
         {/* Right side: shortened addresses */}
-        <div className="hidden sm:flex items-center space-x-6">
-          <div className="flex items-center space-x-1">
-            <span className="text-gray-200 font-semibold">{baseSym}</span>
-            <span className="text-gray-500">{baseShort}</span>
+        <div className="hidden sm:flex flex-col items-center space-y-1 text-xs text-gray-400">
+          <div className="flex items-center space-x-[6px]">
+            <span className="text-xxs text-gray-200 font-semibold">{baseSym}</span>
+            <span className="bg-[#0E141B] text-white px-[6px] py-[3px] text-xxs flex items-center  rounded-sm"><span className="px-2" >{baseShort}</span> <ExternalLink size={9}  /></span>
           </div>
-          <div className="flex items-center space-x-1">
-            <span className="text-gray-200 font-semibold">{quoteSym}</span>
-            <span className="text-gray-500">{quoteShort}</span>
+          <div className="flex items-center space-x-[6px]">
+            <span className="text-xxs text-gray-200 font-semibold">{quoteSym}</span>
+            <span className="bg-[#0E141B] text-white px-[6px] py-[3px] text-xxs flex items-center  rounded-sm"><span className="px-1" >{quoteShort}</span> <ExternalLink size={9}  /></span>
           </div>
         </div>
       </div>
 
       {/* Price row */}
-      <div className="text-2xl font-bold">
-        {priceDisplay} {quoteSym}
+      <div className="px-4 py-1 flex items-center justify-between">
+      <div className="text-md font-bold flex flex-col space-y-2 justify-start items-start">
+       123 {quoteSym}
+
+       <span className="text-xs" >+6.89%</span>
+      </div>
+      <div className="flex items-center justify-end mt-3 space-x-5 text-sm text-gray-300">
+        <div>
+          <span className="text-v2-text-v2-lily-50 font-semibold   flex flex-col justify-start items-start text-xs">Mkt Cap</span> <span className="text-v2-lily-50 font-semibold  text-gray-400"  >$91B</span>
+        </div>
+        <div>
+          <span className="text-v2-text-v2-lily-50 font-semibold   flex flex-col justify-start items-start text-xs">24h Vol</span> <span className="text-v2-lily-50 font-semibold  text-gray-400"  >$2.9B</span>
+        </div>
+        <div>
+          <span className="text-v2-text-v2-lily-50 font-semibold   flex flex-col justify-start items-start text-xs">Liquidity</span> <span  className="text-v2-lily-50 font-semibold  text-gray-400" >$60B</span>
+        </div>
       </div>
 
-      {/* Interval + dummy stats row */}
-      <div className="flex items-center justify-between mt-3">
-        {/* intervals */}
-        <div className="flex space-x-3 text-sm text-gray-300">
-          {intervals.map((int) => (
-            <button
-              key={int}
-              className={
-                int === selectedInterval
-                  ? "text-white border-b border-cyan-400"
-                  : "hover:text-white"
-              }
-              onClick={() => setSelectedInterval(int)}
-            >
-              {int}
-            </button>
-          ))}
-        </div>
-        {/* right side: dummy OHLC or icons */}
-        <div className="flex items-center space-x-4 text-gray-300">
-          <div className="hidden md:flex items-center text-sm space-x-2">
-            <span className="text-gray-500">
-              O {open} | H {high} | L {low} | C {close} | {changeAmt} | {changePct}% | Vol {volume}
-            </span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <button className="hover:text-white flex items-center space-x-1">
-              <span>Indicators</span>
-              <Activity size={16} />
-            </button>
-            <button className="hover:text-white">
-              <Settings size={16} />
-            </button>
-            <button className="hover:text-white">
-              <BarChart4 size={16} />
-            </button>
-            <button className="hover:text-white">
-              <ChevronsDownUp size={16} />
-            </button>
-          </div>
-        </div>
+
       </div>
 
       {/* TradingView embed */}
-      <div className="mt-3 rounded-xl overflow-hidden w-full border border-gray-700">
+      <div className="rounded-xl overflow-hidden w-full ">
 
 
-        {/* <iframe
+        <iframe
           title="TradingView Chart"
           src={`https://www.tradingview.com/widgetembed/?frameElementId=tradingview_widget&symbol=NASDAQ:AAPL&interval=D&hidesidetoolbar=1&theme=dark&style=1&timezone=Etc/UTC&studies=[]&locale=en&utm_source=yourwebsite.com&utm_medium=widget&utm_campaign=chart&utm_term=NASDAQ:AAPL`}
           frameBorder="0"
           className="w-full !border-none"
-          style={{ height: "400px", minHeight: "300px" }}
-        /> */}
+          style={{ height: "370px", minHeight: "300px" }}
+        />
+
       </div>
 
       {/* Bottom stats row */}
-      <div className="flex items-center justify-end mt-3 space-x-6 text-sm text-gray-300">
-        <div>
-          <span className="text-gray-400">Mkt Cap</span> <span className="ml-1">$91B</span>
-        </div>
-        <div>
-          <span className="text-gray-400">24h Vol</span> <span className="ml-1">$2.9B</span>
-        </div>
-        <div>
-          <span className="text-gray-400">Liquidity</span> <span className="ml-1">$60B</span>
-        </div>
-      </div>
+    
     </div>
   );
 }

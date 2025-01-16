@@ -30,6 +30,7 @@ import LimitComponent from "./LimitComponent";
 import ConnectWalletSection from "./ConnectWalletSection";
 import DCAComponent from "./dcaComponent";
 import VAComponent from "./VAComponent";
+import TradingViewChartCard from "./ApeProChartCard";
 const jupiterQuoteApi = createJupiterApiClient();
 const tabs = ["Swap", "Limit", "DCA", "VA"];
 
@@ -460,37 +461,38 @@ export default function SpotTradeSection() {
   };
 
   const tabStates = {
-    Swap: { showCancelAll: false, additionalProp: "swap-specific-data" },
+    Swap: {
+      showCancelAll: false,
+      additionalProp: "swap-specific-data",
+      tabs: [{ id: "default", label: "Default" }],
+    },
     Limit: {
+      headerTop: true,
       showCancelAll: true,
       additionalProp: "limit-specific-data",
       tabs: [
         { id: "openOrders", label: "Open Orders" },
-        { id: "Open Orders", label: "openOrders" },
+        { id: "Order History", label: "Order History" },
       ],
-      headerTop: true,
     },
     DCA: {
+      headerTop: true,
       showCancelAll: false,
       additionalProp: "dca-specific-data",
       tabs: [
-        { id: "Active DCAs", label: "Past DCAs" },
-        { id: "Past DCAs", label: "Active DCAs" },
+        { id: "activeDCAs", label: "Active DCAs" },
+        { id: "pastDCAs", label: "Past DCAs" },
       ],
-      headerTop: true,
     },
     VA: {
+      headerTop: true,
       showCancelAll: true,
       additionalProp: "va-specific-data",
       tabs: [
-        { id: "Active VAs", label: "Past VAs" },
-        { id: "Past VAs", label: "Active VAs" },
+        { id: "activeVAs", label: "Active VAs" },
+        { id: "pastVAs", label: "Past VAs" },
       ],
-      headerTop: true,
     },
-  };
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
   };
 
   return (
@@ -511,16 +513,31 @@ export default function SpotTradeSection() {
     w-[55%]`} // Keep a fixed width so tabs don't move
           >
             <div className="bg-gray-900 rounded-2xl overflow-hidden">
-              {/* <TradingViewChartCard
-        baseToken={sellCurrency}
-        quoteToken={buyCurrency}
-      /> */}
+              <TradingViewChartCard
+                baseToken={sellCurrency}
+                quoteToken={buyCurrency}
+              />
 
-              <iframe
+              {/* <TradingViewChartCard
+  baseToken={{
+    symbol: "POODL",
+    address: "7f7dgNNeL1RwbEd6Eao5BE8KNurTnLZnRZeVjkCGJgQD",
+    logoURI:
+      "https://img-v1.raydium.io/icon/7f7dgNNeL1RwbEd6Eao5BE8KNurTnLZnRZeVjkCGJgQD.png",
+  }}
+  quoteToken={{
+    symbol: "USDT",
+    address: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+    logoURI:
+      "https://img-v1.raydium.io/icon/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB.png",
+  }}
+/> */}
+
+              {/* <iframe
                 src="https://www.tradingview.com/widgetembed/?theme=dark"
                 frameBorder="0"
                 className="h-[400px] sm:h-[450px] lg:h-[500px] rounded-2xl w-full"
-              ></iframe>
+              ></iframe> */}
             </div>
             {showConnectWallet && (
               <div
@@ -531,8 +548,9 @@ export default function SpotTradeSection() {
                 }`}
               >
                 <ConnectWalletSection
-                  tabs={[activeTab]} // Pass the current tab as a prop
-                  {...tabStates[activeTab]} // Spread unique states for the active tab
+                  tabs={tabStates[activeTab]?.tabs || []} // Ensure tabs is always an array
+                  defaultActiveTab={tabStates[activeTab]?.tabs?.[0]?.id || ""} // Ensure defaultActiveTab is valid
+                  {...(tabStates[activeTab] || {})} // Safely spread the state if it exists
                 />
               </div>
             )}
@@ -589,18 +607,23 @@ export default function SpotTradeSection() {
 
           {/* Dynamic Tab Content */}
           {renderTabContent()}
+
+          {!showChart  && (
+  <div className="chart-section w-[55%] bg-gray-900 rounded-2xl overflow-hidden transition-all duration-500">
+    <TradingViewChartCard baseToken={sellCurrency} quoteToken={buyCurrency} />
+    {showConnectWallet && (
+      <ConnectWalletSection
+        tabs={tabStates[activeTab]?.tabs || []}
+        defaultActiveTab={tabStates[activeTab]?.tabs?.[0]?.id || ""}
+        {...(tabStates[activeTab] || {})}
+      />
+    )}
+  </div>
+)}
+
         </div>
       </div>
 
-      {/* <button
-        onClick={openModal}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Open Token Select Modal
-      </button>
-
-      {/* TokenSelectModal usage */}
-      {/* <TokenSelectModal isOpen={isModalOpen} onClose={closeModal} /> */}
 
       {modalOpen && (
         <Modal
