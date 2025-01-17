@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Dispatch, SetStateAction } from 'react';
 
+
+
+ declare global {
+  interface Window {
+    deBridge?: any; // Declare deBridge as part of the window object
+  }
+}
+
 export type SwapProps = {
     fromToken: { tokenName: string; address: string };
     toToken: { tokenName: string; address: string };

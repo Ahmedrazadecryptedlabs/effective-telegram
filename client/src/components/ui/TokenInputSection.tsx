@@ -93,7 +93,7 @@ const TokenInputSection: React.FC<TokenInputSectionProps> = ({
               {selectedToken?.symbol || "Select Token"}
             </span>
             <ChevronDown
-              className="w-8 text-v2-lily-50 font-bold transition-colors duration-300 group-hover:text-cyan-400"
+              className="w-6  text-white-25 font-bold transition-colors duration-300 group-hover:text-cyan-400"
             />
           </button>
         )}

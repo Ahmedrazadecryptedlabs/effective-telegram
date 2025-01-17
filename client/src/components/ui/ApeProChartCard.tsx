@@ -208,10 +208,10 @@ export default function TradingViewChartCard({
 
       {/* Price row */}
       <div className="px-4 py-1 flex items-center justify-between">
-      <div className="text-md font-bold flex flex-col space-y-2 justify-start items-start">
+      <div className="text-md font-bold flex flex-col space-y-3 justify-start items-start">
        123 {quoteSym}
 
-       <span className="text-xs" >+6.89%</span>
+       <span className="text-xs text-green-500" >+6.89%</span>
       </div>
       <div className="flex items-center justify-end mt-3 space-x-5 text-sm text-gray-300">
         <div>

@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+
+/* Scrollbar container */
+::-webkit-scrollbar {
+  width: 5px; /* Width of the scrollbar */
+}
+
+/* Scrollbar track */
+::-webkit-scrollbar-track {
+  background: #1a202c; /* Dark background */
+  border-radius: 8px; /* Rounded edges */
+}
+
+/* Scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  background: #6B7280; /* Gray thumb */
+  border-radius: 12px; /* Rounded edges */
+}
+
+/* Scrollbar thumb on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #718096; /* Lighter gray on hover */
+}
+
+
 /* Remove spinner (Chrome, Safari, Edge, Opera) */
 [type="number"]::-webkit-inner-spin-button,
 [type="number"]::-webkit-outer-spin-button {
@@ -175,6 +199,14 @@ color: #4B5258;
 .text-gray-base{
   color: #4E545B;
 }
+.text-white-25 {
+  color: hsla(0, 0%, 100%, .25);
+}
+
+.text-v2-lily-75 {
+  color: rgba(232, 249, 255, .75);
+}
+
 
 @layer base {
   :root {

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Modal from "@/components/ui/modal";
 import {
   AlignHorizontalDistributeCenter,
@@ -31,6 +32,7 @@ import ConnectWalletSection from "./ConnectWalletSection";
 import DCAComponent from "./dcaComponent";
 import VAComponent from "./VAComponent";
 import TradingViewChartCard from "./ApeProChartCard";
+import MiniTradingViewWidget from "./MiniTradingViewWidget";
 const jupiterQuoteApi = createJupiterApiClient();
 const tabs = ["Swap", "Limit", "DCA", "VA"];
 
@@ -497,142 +499,145 @@ export default function SpotTradeSection() {
 
   return (
     <div className="mt-12 p-0 sm:p-4">
-      <div className="flex flex-wrap justify-center lg:flex-nowrap w-full lg:w-4/5 gap-4 p-4 m-auto">
-        {/* Chart Section with Animation */}
-
-        {showChart ? (
-          <div
-            className={`chart-section 
-    transition-all 
-    duration-500 
-    ${
-      showChart
-        ? "opacity-100 pointer-events-auto"
-        : "opacity-0 pointer-events-none"
-    } 
-    w-[55%]`} // Keep a fixed width so tabs don't move
+    <div className="flex flex-wrap justify-center lg:flex-nowrap w-full lg:w-4/5 gap-4 p-4 m-auto">
+      {/* Chart Section with Animation */}
+      <AnimatePresence>
+        {showChart && (
+          <motion.div
+            key="chart-section"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className={`chart-section w-[55%]`}
           >
             <div className="bg-gray-900 rounded-2xl overflow-hidden">
               <TradingViewChartCard
                 baseToken={sellCurrency}
                 quoteToken={buyCurrency}
               />
-
-              {/* <TradingViewChartCard
-  baseToken={{
-    symbol: "POODL",
-    address: "7f7dgNNeL1RwbEd6Eao5BE8KNurTnLZnRZeVjkCGJgQD",
-    logoURI:
-      "https://img-v1.raydium.io/icon/7f7dgNNeL1RwbEd6Eao5BE8KNurTnLZnRZeVjkCGJgQD.png",
-  }}
-  quoteToken={{
-    symbol: "USDT",
-    address: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
-    logoURI:
-      "https://img-v1.raydium.io/icon/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB.png",
-  }}
-/> */}
-
-              {/* <iframe
-                src="https://www.tradingview.com/widgetembed/?theme=dark"
-                frameBorder="0"
-                className="h-[400px] sm:h-[450px] lg:h-[500px] rounded-2xl w-full"
-              ></iframe> */}
             </div>
+  
             {showConnectWallet && (
-              <div
-                className={`transition-opacity duration-500 ${
-                  showConnectWallet
-                    ? "opacity-100"
-                    : "opacity-0 pointer-events-none"
-                }`}
+              <motion.div
+                key="connect-wallet"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="transition-opacity"
               >
                 <ConnectWalletSection
-                  tabs={tabStates[activeTab]?.tabs || []} // Ensure tabs is always an array
-                  defaultActiveTab={tabStates[activeTab]?.tabs?.[0]?.id || ""} // Ensure defaultActiveTab is valid
-                  {...(tabStates[activeTab] || {})} // Safely spread the state if it exists
+                  tabs={tabStates[activeTab]?.tabs || []}
+                  defaultActiveTab={tabStates[activeTab]?.tabs?.[0]?.id || ""}
+                  {...(tabStates[activeTab] || {})}
                 />
-              </div>
+              </motion.div>
             )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+  
+      {/* Tabs Section */}
+      <motion.div
+        initial={{ width: showChart ? "29%" : "35%", opacity: 0 }}
+        animate={{ width: showChart ? "29%" : "35%", opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        className="tabs-section w-full space-y-3"
+      >
+        <div className="flex flex-col md:flex-row items-center justify-between rounded-full w-full">
+          <div
+            className={`flex items-center px-1 space-x-1 justify-evenly bg-[#192230] rounded-full py-1 ${
+              showChart ? "w-full" : "w-3/5 !mr-12"
+            }`}
+          >
+            {tabs.map((tab) => (
+              <button
+                key={tab}
+                onClick={() => {
+                  setActiveTab(tab);
+                  if (tab !== "Swap") {
+                    setShowChart(true);
+                  }
+                }}
+                className={`w-full px-5 py-3 rounded-full text-sm font-bold transition-all ${
+                  activeTab === tab
+                    ? "bg-primary/20 text-primary"
+                    : "bg-transparent text-white hover:bg-primary/10 hover:text-gray-200"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
           </div>
-        ) : null}
-
-        {/* Tabs Section */}
-        <div style={{ width: "28%" }} className="w-full space-y-3 tabs-section">
-          <div className="flex flex-col md:flex-row items-center justify-between rounded-full w-full">
-            <div className="flex items-center px-1  space-x-1 justify-evenly bg-[#192230] rounded-full  py-1 w-full">
-              {tabs.map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`w-full   px-5 py-3 rounded-full text-sm font-bold transition-all ${
-                    activeTab === tab
-                      ? "bg-primary/20 text-primary"
-                      : "bg-transparent text-white hover:bg-primary/10 hover:text-gray-200"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
+  
+          {/* Right-Side Icons */}
+          {activeTab === "Swap" && (
+            <div className="flex items-center space-x-1 mt-3 md:mt-0 ml-2">
+              <motion.button
+                onClick={() => setShowChart(!showChart)}
+                whileHover={{ scale: 1.1 }}
+                className={`w-11 h-11 flex items-center justify-center rounded-full transition ${
+                  showChart
+                    ? "bg-primary/10 text-cyan-400"
+                    : "bg-primary-transparent text-white"
+                }`}
+              >
+                <AlignHorizontalDistributeCenter size={17} />
+              </motion.button>
+              <motion.button
+                onClick={() => setShowConnectWallet(!showConnectWallet)}
+                whileHover={{ scale: 1.1 }}
+                className={`w-11 h-11 flex items-center justify-center rounded-full transition ${
+                  showConnectWallet
+                    ? "bg-primary/10 text-cyan-400"
+                    : "bg-primary-transparent text-white"
+                }`}
+              >
+                <Clock size={19} />
+              </motion.button>
             </div>
-
-            {/* Right-Side Icons */}
-            {activeTab === "Swap" && (
-              <div className="flex items-center space-x-1 mt-3 md:mt-0 ml-2">
-                {/* px-6 py-2 text-primary bg-primary/10 text-black rounded-lg font-bold shadow-md  transition-all duration-300  hover:border-cyan-400 border border-transparent hover:border-cyan-400 */}
-
-                <button
-                  onClick={() => setShowChart(!showChart)}
-                  className={`w-11 h-11 flex items-center justify-center rounded-full transition ${
-                    showChart
-                      ? " bg-primary/10 text-cyan-400"
-                      : " bg-primary-transparent text-white"
-                  }`}
+          )}
+        </div>
+  
+        {/* Dynamic Tab Content */}
+        {renderTabContent()}
+  
+        {!showChart && (
+          <div>
+            <MiniTradingViewWidget />
+  
+            <AnimatePresence>
+              {showConnectWallet && (
+                <motion.div
+                  key="connect-wallet-static"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                 >
-                  <AlignHorizontalDistributeCenter size={17} />
-                </button>
-                <button
-                  onClick={() => setShowConnectWallet(!showConnectWallet)}
-                  className={`w-11 h-11 flex items-center justify-center rounded-full transition ${
-                    showConnectWallet
-                      ? " bg-primary/10 text-cyan-400"
-                      : " bg-primary-transparent text-white"
-                  }`}
-                >
-                  <Clock size={19} />
-                </button>
-              </div>
-            )}
+                  <ConnectWalletSection
+                    tabs={tabStates[activeTab]?.tabs || []}
+                    defaultActiveTab={tabStates[activeTab]?.tabs?.[0]?.id || ""}
+                    {...(tabStates[activeTab] || {})}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-
-          {/* Dynamic Tab Content */}
-          {renderTabContent()}
-
-          {!showChart  && (
-  <div className="chart-section w-[55%] bg-gray-900 rounded-2xl overflow-hidden transition-all duration-500">
-    <TradingViewChartCard baseToken={sellCurrency} quoteToken={buyCurrency} />
-    {showConnectWallet && (
-      <ConnectWalletSection
-        tabs={tabStates[activeTab]?.tabs || []}
-        defaultActiveTab={tabStates[activeTab]?.tabs?.[0]?.id || ""}
-        {...(tabStates[activeTab] || {})}
+        )}
+      </motion.div>
+    </div>
+  
+    {modalOpen && (
+      <Modal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        tokenList={tokenList}
+        onTokenSelect={handleTokenSelection}
       />
     )}
   </div>
-)}
-
-        </div>
-      </div>
-
-
-      {modalOpen && (
-        <Modal
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-          tokenList={tokenList}
-          onTokenSelect={handleTokenSelection} // <--- capture the selected token
-        />
-      )}
-    </div>
+  
   );
 }
