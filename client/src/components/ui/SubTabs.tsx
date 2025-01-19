@@ -1,32 +1,27 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useState } from "react";
+import Link from 'next/link';
 
-export default function SubTabs({ onSubTabChange }: { onSubTabChange: (subTab: string) => void }) {
+export default function SubTabs() {
   const pathname = usePathname();
   const router = useRouter();
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
 
-  // Get the active tab from the pathname
   const activeSubTab = pathname.split("/").pop()?.toLowerCase() || "onramp";
 
-  // Handle sub-tab click
-  const handleSubTabClick = useCallback(
-    async (subTab: string) => {
-      const newPath = `/onboard/${subTab.toLowerCase()}`;
-      if (pathname !== newPath) {
-        setLoading(true); // Start loading
-        try {
-          onSubTabChange(subTab); // Update parent component
-          await router.replace(newPath); // Navigate efficiently
-        } finally {
-          setLoading(false); // Stop loading
-        }
+  const handleSubTabClick = async (subTab: string) => {
+    const newPath = `/onboard/${subTab.toLowerCase()}`;
+    if (pathname !== newPath) {
+      setLoading(true);
+      try {
+        await router.push(newPath);
+      } finally {
+        setLoading(false);
       }
-    },
-    [onSubTabChange, pathname, router]
-  );
+    }
+  };
 
   return (
     <div className="flex items-end justify-center bg-[#192531] h-16 w-full overflow-x-auto">
@@ -34,15 +29,15 @@ export default function SubTabs({ onSubTabChange }: { onSubTabChange: (subTab: s
         {["Onramp", "USDC", "deBridge", "CEX"].map((subTab) => {
           const isActive = activeSubTab === subTab.toLowerCase();
           return (
-            <div
-              key={subTab}
-              className={`px-3 pb-4 text-sm md:text-base font-bold cursor-pointer whitespace-nowrap ${
-                isActive ? "text-cyan-400 border-b-2 border-cyan-400" : "text-gray-400"
-              }`}
-              onClick={() => handleSubTabClick(subTab)}
-            >
-              {loading && isActive ? "Loading..." : subTab} {/* Show loading */}
-            </div>
+            <Link 
+            key={subTab}
+            href={`/onboard/${subTab.toLowerCase()}`}
+            className={`px-3 pb-4 text-sm md:text-base font-bold cursor-pointer whitespace-nowrap ${
+              isActive ? "text-cyan-400 border-b-2 border-cyan-400" : "text-gray-400"
+            }`}
+          >
+            {loading && isActive ? "Loading..." : subTab}
+          </Link>          
           );
         })}
       </div>

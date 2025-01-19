@@ -97,7 +97,7 @@ const TokenInputSection: React.FC<TokenInputSectionProps> = ({
         <div className="flex-1 flex flex-col justify-end">
           {quoteLoading ? (
             <div
-              style={{width: "300px" }}
+              style={{width: "230px" }}
               className="text-right"
             >
               {/* Skeleton for input */}

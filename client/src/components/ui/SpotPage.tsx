@@ -499,146 +499,154 @@ export default function SpotTradeSection() {
 
   return (
     <div className="mt-12 p-0 sm:p-4">
-      <div className="flex flex-wrap justify-center lg:flex-nowrap w-full lg:w-4/5 gap-4 p-4 m-auto">
-        {/* Chart Section with Animation */}
-        <AnimatePresence>
-          {showChart && (
-            <motion.div
-              key="chart-section"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
-              className={`chart-section w-[55%]`}
-            >
-              <div className="bg-gray-900 rounded-2xl overflow-hidden">
-                <TradingViewChartCard
-                  baseToken={sellCurrency}
-                  quoteToken={buyCurrency}
-                />
-              </div>
+    <div className="flex flex-wrap justify-center lg:flex-nowrap w-full lg:w-4/5 gap-4 p-4 m-auto">
+      {/* Chart Section with Animation */}
+      <AnimatePresence>
+        {showChart && (
+          <motion.div
+            key="chart-section"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className={`chart-section w-full lg:w-[55%] order-2 lg:order-none`}
+          >
+            <div className="bg-gray-900 rounded-2xl order-2 overflow-hidden hidden md:block">
+              <TradingViewChartCard
+                baseToken={sellCurrency}
+                quoteToken={buyCurrency}
+              />
+            </div>
 
+            {showConnectWallet && (
+              <motion.div
+                key="connect-wallet"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="transition-opacity order-4 lg:order-none"
+              >
+                <ConnectWalletSection
+                  tabs={tabStates[activeTab]?.tabs || []}
+                  defaultActiveTab={tabStates[activeTab]?.tabs?.[0]?.id || ""}
+                  {...(tabStates[activeTab] || {})}
+                />
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Tabs Section */}
+      <motion.div
+        initial={{ width: showChart ? "32%" : "35%", opacity: 0 }}
+        animate={{ width: showChart ? "32%" : "35%", opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        className="tabs-section w-full space-y-3 order-1 lg:order-none"
+      >
+        <div className="flex md:flex-row items-center justify-between rounded-full w-full">
+          <div
+            className={`flex items-center px-1 space-x-1 justify-evenly bg-[#192230] rounded-full py-1 ${
+              showChart ? "w-full" : " w-full !mr-12"
+            }`}
+          >
+            {tabs.map((tab) => (
+              <button
+                key={tab}
+                onClick={() => {
+                  setActiveTab(tab);
+                  if (tab !== "Swap") {
+                    setShowChart(true);
+                  }
+                }}
+                className={`w-full py-3 rounded-full text-sm font-bold transition-all ${
+                  activeTab === tab
+                    ? "bg-primary/20 text-primary"
+                    : "bg-transparent text-white hover:bg-primary/10 hover:text-gray-200"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          {/* Right-Side Icons */}
+          {activeTab === "Swap" && (
+            <div className="flex items-center space-x-1 ml-2">
+              <motion.button
+                onClick={() => setShowChart(!showChart)}
+                className={`w-11 h-11 flex items-center justify-center rounded-full transition ${
+                  showChart
+                    ? "bg-primary/10 text-cyan-400"
+                    : "bg-primary-transparent text-white"
+                }`}
+              >
+                <AlignHorizontalDistributeCenter size={17} />
+              </motion.button>
+              <motion.button
+                onClick={() => setShowConnectWallet(!showConnectWallet)}
+                className={`w-11 h-11 flex items-center justify-center rounded-full transition ${
+                  showConnectWallet
+                    ? "bg-primary/10 text-cyan-400"
+                    : "bg-primary-transparent text-white"
+                }`}
+              >
+                <Clock size={19} />
+              </motion.button>
+            </div>
+          )}
+        </div>
+
+        {showChart && (
+          <div className="bg-gray-900 rounded-2xl order-2 overflow-hidden block  md:hidden">
+            <TradingViewChartCard
+              baseToken={sellCurrency}
+              quoteToken={buyCurrency}
+            />
+          </div>
+        )}
+
+        {/* Dynamic Tab Content */}
+        {renderTabContent()}
+
+        {!showChart && (
+          <div className="order-5 lg:order-none">
+            <MiniTradingViewWidget />
+
+            <AnimatePresence>
               {showConnectWallet && (
                 <motion.div
-                  key="connect-wallet"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
+                  key="connect-wallet-static"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="transition-opacity"
                 >
                   <ConnectWalletSection
                     tabs={tabStates[activeTab]?.tabs || []}
-                    defaultActiveTab={tabStates[activeTab]?.tabs?.[0]?.id || ""}
+                    defaultActiveTab={
+                      tabStates[activeTab]?.tabs?.[0]?.id || ""
+                    }
                     {...(tabStates[activeTab] || {})}
                   />
                 </motion.div>
               )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Tabs Section */}
-        <motion.div
-          initial={{ width: showChart ? "29%" : "35%", opacity: 0 }}
-          animate={{ width: showChart ? "29%" : "35%", opacity: 1 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="tabs-section w-full space-y-3"
-        >
-          <div className="flex flex-col md:flex-row items-center justify-between rounded-full w-full">
-            <div
-              className={`flex items-center px-1 space-x-1 justify-evenly bg-[#192230] rounded-full py-1 ${
-                showChart ? "w-full" : "w-3/5 !mr-12"
-              }`}
-            >
-              {tabs.map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => {
-                    setActiveTab(tab);
-                    if (tab !== "Swap") {
-                      setShowChart(true);
-                    }
-                  }}
-                  className={`w-full px-5 py-3 rounded-full text-sm font-bold transition-all ${
-                    activeTab === tab
-                      ? "bg-primary/20 text-primary"
-                      : "bg-transparent text-white hover:bg-primary/10 hover:text-gray-200"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-
-            {/* Right-Side Icons */}
-            {activeTab === "Swap" && (
-              <div className="flex items-center space-x-1 mt-3 md:mt-0 ml-2">
-                <motion.button
-                  onClick={() => setShowChart(!showChart)}
-                  whileHover={{ scale: 1.1 }}
-                  className={`w-11 h-11 flex items-center justify-center rounded-full transition ${
-                    showChart
-                      ? "bg-primary/10 text-cyan-400"
-                      : "bg-primary-transparent text-white"
-                  }`}
-                >
-                  <AlignHorizontalDistributeCenter size={17} />
-                </motion.button>
-                <motion.button
-                  onClick={() => setShowConnectWallet(!showConnectWallet)}
-                  whileHover={{ scale: 1.1 }}
-                  className={`w-11 h-11 flex items-center justify-center rounded-full transition ${
-                    showConnectWallet
-                      ? "bg-primary/10 text-cyan-400"
-                      : "bg-primary-transparent text-white"
-                  }`}
-                >
-                  <Clock size={19} />
-                </motion.button>
-              </div>
-            )}
+            </AnimatePresence>
           </div>
-
-          {/* Dynamic Tab Content */}
-          {renderTabContent()}
-
-          {!showChart && (
-            <div>
-              <MiniTradingViewWidget />
-
-              <AnimatePresence>
-                {showConnectWallet && (
-                  <motion.div
-                    key="connect-wallet-static"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                  >
-                    <ConnectWalletSection
-                      tabs={tabStates[activeTab]?.tabs || []}
-                      defaultActiveTab={
-                        tabStates[activeTab]?.tabs?.[0]?.id || ""
-                      }
-                      {...(tabStates[activeTab] || {})}
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          )}
-        </motion.div>
-      </div>
-
-      {modalOpen && (
-        <Modal
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-          tokenList={tokenList}
-          onTokenSelect={handleTokenSelection}
-        />
-      )}
+        )}
+      </motion.div>
     </div>
+
+    {modalOpen && (
+      <Modal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        tokenList={tokenList}
+        onTokenSelect={handleTokenSelection}
+      />
+    )}
+  </div>
+
   );
 }

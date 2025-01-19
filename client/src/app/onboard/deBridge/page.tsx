@@ -12,21 +12,18 @@ export default function DeBridgePage() {
     script.src = "https://app.debridge.finance/assets/scripts/widget.js";
     script.async = true;
 
-    // Handle when the script is ready
     script.onload = () => {
       initializeWidget();
 
-      // Add a 10-second delay before displaying the widget
+      // Add a delay before displaying the widget
       setTimeout(() => {
         setSkeletonVisible(false); // Hide skeleton
         setWidgetZIndex(10); // Bring the widget to the front
-      }, 10000);
+      }, 12000);
     };
 
-    // Append the script to the document
     document.body.appendChild(script);
 
-    // Cleanup: remove script on unmount
     return () => {
       document.body.removeChild(script);
     };
@@ -34,7 +31,6 @@ export default function DeBridgePage() {
 
   const initializeWidget = () => {
     try {
-      // Initialize the widget
       window.deBridge?.widget({
         v: "1",
         element: "debridgeWidget",
@@ -44,42 +40,8 @@ export default function DeBridgePage() {
         height: "720",
         r: null,
         supportedChains: JSON.stringify({
-          inputChains: {
-            "1": "all",
-            "10": "all",
-            "56": "all",
-            "100": "all",
-            "137": "all",
-            "146": "all",
-            "250": "all",
-            "998": "all",
-            "1088": "all",
-            "7171": "all",
-            "8453": "all",
-            "42161": "all",
-            "43114": "all",
-            "59144": "all",
-            "7565164": "all",
-            "245022934": "all",
-          },
-          outputChains: {
-            "1": "all",
-            "10": "all",
-            "56": "all",
-            "100": "all",
-            "137": "all",
-            "146": "all",
-            "250": "all",
-            "998": "all",
-            "1088": "all",
-            "7171": "all",
-            "8453": "all",
-            "42161": "all",
-            "43114": "all",
-            "59144": "all",
-            "7565164": "all",
-            "245022934": "all",
-          },
+          inputChains: { "1": "all", "10": "all", "56": "all" },
+          outputChains: { "1": "all", "10": "all", "56": "all" },
         }),
         inputChain: 56,
         outputChain: 1,
@@ -89,18 +51,12 @@ export default function DeBridgePage() {
         showSwapTransfer: true,
         amount: "",
         outputAmount: "",
-        isAmountFromNotModifiable: false,
-        isAmountToNotModifiable: false,
         lang: "en",
         mode: "deswap",
-        isEnableCalldata: false,
         styles:
           "eyJhcHBCYWNrZ3JvdW5kIjoiIzMwNDI1NiIsImJvcmRlclJhZGl1cyI6MTIsInByaW1hcnlCdG5CZyI6IiMxMjFEMjgiLCJwcmltYXJ5QnRuVGV4dCI6IiMxZmJkZTgiLCJkZXNjcmlwdGlvbkZvbnRTaXplIjoiMTIifQ==",
         theme: "dark",
         isHideLogo: false,
-        logo: "",
-        disabledWallets: [],
-        disabledElements: [],
       });
     } catch (error) {
       console.error("Error initializing widget:", error);
@@ -110,12 +66,12 @@ export default function DeBridgePage() {
   return (
     <div className="text-white text-center flex flex-col justify-center items-center">
       <p className="text-center text-base font-medium text-v2-lily-75 mt-6 mb-4">
-        Experience native cross-chain trading with deep liquidity and <br className="hidden sm:block" />
+        Experience native cross-chain trading with deep liquidity and{" "}
+        <br className="hidden sm:block" />
         lightning-fast execution, powered by deBridge and Jupiter.
       </p>
 
-      <div className="relative w-[600px] h-[720px]">
-        {/* Show Skeleton until the widget is ready */}
+      <div className="relative w-full sm:w-[600px] h-[500px] sm:h-[720px]">
         {isSkeletonVisible && (
           <div className="absolute top-0 left-0 w-full h-full bg-[#192531] rounded-2xl animate-pulse p-4 space-y-4">
             <div className="flex justify-between items-center">
@@ -133,10 +89,9 @@ export default function DeBridgePage() {
           </div>
         )}
 
-        {/* Render the Widget */}
         <div
           id="debridgeWidget"
-          className={`absolute top-0 left-0 w-full h-full overflow-hidden rounded-2xl [&>iframe]:max-w-full`}
+          className="absolute top-0 left-0 w-full h-full overflow-hidden rounded-2xl [&>iframe]:max-w-full"
           style={{
             zIndex: widgetZIndex,
             opacity: widgetZIndex > 0 ? 1 : 0,

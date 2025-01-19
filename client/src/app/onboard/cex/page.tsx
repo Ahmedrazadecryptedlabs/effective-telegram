@@ -1,10 +1,10 @@
-// "use client";
+"use client";
 
 import { ExternalLink } from "lucide-react";
 
 export default function CEXPage() {
   return (
-    <div className="min-h-screen flex flex-col items-center px-6 py-8">
+    <div className="min-h-screen flex flex-col items-center sm:px-6 sm:py-8">
       {/* Header Text */}
       <h1 className="text-center text-xss md:text-md font-semibold mb-6 text-gray-400">
         Transfer assets to your Solana wallet from a Centralized Exchange (CEX){" "}
@@ -13,7 +13,7 @@ export default function CEXPage() {
       </h1>
 
       {/* Guides Buttons */}
-      <div className="grid  sm:grid-cols-4 gap-1 mb-6 justify-center">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 mb-6 justify-center  w-full sm:w-auto">
         {[
           {
             name: "BINANCE",
@@ -41,10 +41,9 @@ export default function CEXPage() {
             href={item.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex flex-col items-center justify-center px-[28px] py-3  bg-v2-background-dark text-white text-md font-medium rounded-lg shadow-md transition"
+            className="flex flex-col items-center justify-center px-[28px] py-3 bg-v2-background-dark text-white text-md font-medium rounded-lg"
           >
-            <img className="w-18 h-18" src={item.url} alt="" />
-
+            <img className="w-18 h-18" src={item.url} alt={item.name} />
             <div className="text-gray-400 flex items-center text-sm mt-4">
               <span className="text-xs">Read Guide</span>{" "}
               <ExternalLink className="ml-1" size={"12px"} />

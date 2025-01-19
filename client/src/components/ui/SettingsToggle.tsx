@@ -21,7 +21,7 @@ const SettingsToggle: React.FC = () => {
       {/* Auto / Manual Toggle */}
       <div className="flex  rounded-full py-1 px-1 bg-[#18222D]">
         <button
-          className={`px-[12px]  py-[3px] text-xs  font-medium rounded-xl ${
+          className={`px-[12px]  hover:text-primary  py-[3px] text-xs  font-medium rounded-xl ${
             selectedMode === "Auto"
               ? "bg-primary/10 text-cyan-400"
               : "text-gray-400"
@@ -31,7 +31,7 @@ const SettingsToggle: React.FC = () => {
           Auto
         </button>
         <button
-          className={` px-[12px] py-[3px] text-xs  font-medium rounded-xl ${
+          className={` px-[12px]  hover:text-primary py-[3px] text-xs  font-medium rounded-xl ${
             selectedMode === "Manual"
               ? "bg-primary/10 text-cyan-400"
               : "text-gray-400"

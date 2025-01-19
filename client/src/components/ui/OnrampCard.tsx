@@ -1,7 +1,18 @@
-import React, { useState } from "react";
+'use client';
+
+import React, { useState, useEffect } from "react";
 
 export default function OnrampCard() {
   const [isLoading, setIsLoading] = useState(true);
+  const [shouldRenderSkeleton, setShouldRenderSkeleton] = useState(true);
+
+  // Introduce a slight delay before hiding the skeleton completely
+  useEffect(() => {
+    if (!isLoading) {
+      const timer = setTimeout(() => setShouldRenderSkeleton(false), 300); // Delay of 300ms
+      return () => clearTimeout(timer); // Cleanup the timer
+    }
+  }, [isLoading]);
 
   return (
     <div className="relative flex flex-col items-center px-4 sm:px-0">
@@ -11,8 +22,12 @@ export default function OnrampCard() {
 
       <div className="relative w-full max-w-md">
         {/* Skeleton loader */}
-        {isLoading && (
-          <div className="absolute inset-0 bg-gray-700 animate-pulse rounded-lg z-10"></div>
+        {shouldRenderSkeleton && (
+          <div
+            className={`absolute inset-0 bg-gray-700 rounded-lg z-10 transition-opacity duration-300 ${
+              isLoading ? "opacity-100" : "opacity-0"
+            }`}
+          ></div>
         )}
         {/* Actual iframe */}
         <iframe
