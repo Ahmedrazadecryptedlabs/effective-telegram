@@ -215,13 +215,13 @@ export default function TradingViewChartCard({
       </div>
       <div className="flex items-center justify-end mt-3 space-x-5 text-sm text-gray-300">
         <div>
-          <span className="text-v2-text-v2-lily-50 font-semibold   flex flex-col justify-start items-start text-xs">Mkt Cap</span> <span className="text-v2-lily-50 font-semibold  text-gray-400"  >$91B</span>
+          <span className="text-[#41595A] font-semibold   flex flex-col justify-start items-start text-xs">Mkt Cap</span> <span className="text-v2-lily-50 font-semibold  text-gray-400"  >$91B</span>
         </div>
         <div>
-          <span className="text-v2-text-v2-lily-50 font-semibold   flex flex-col justify-start items-start text-xs">24h Vol</span> <span className="text-v2-lily-50 font-semibold  text-gray-400"  >$2.9B</span>
+          <span className="text-[#41595A] font-semibold   flex flex-col justify-start items-start text-xs">24h Vol</span> <span className="text-v2-lily-50 font-semibold  text-gray-400"  >$2.9B</span>
         </div>
         <div>
-          <span className="text-v2-text-v2-lily-50 font-semibold   flex flex-col justify-start items-start text-xs">Liquidity</span> <span  className="text-v2-lily-50 font-semibold  text-gray-400" >$60B</span>
+          <span className="text-[#41595A] font-semibold   flex flex-col justify-start items-start text-xs">Liquidity</span> <span  className="text-v2-lily-50 font-semibold  text-gray-400" >$60B</span>
         </div>
       </div>
 
