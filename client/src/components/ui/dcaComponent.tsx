@@ -13,7 +13,7 @@ interface DCAComponentProps {
   setBuyCurrency: (token: any) => void;
   sellAmount: number | undefined;
   setSellAmount: (amount: number | undefined) => void;
-  buyAmount: number;
+  buyAmount: number | undefined;
   quoteLoading: boolean;
   modalType: "sell" | "buy";
   setModalType: (type: "sell" | "buy") => void;

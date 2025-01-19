@@ -16,7 +16,17 @@ const RateExpirySection: React.FC<RateExpirySectionProps> = ({
   onUseMarketClick,
 }) => {
   // State for managing selected option in ReusableDropdown
-  const [selectedEveryOption, setSelectedEveryOption] = useState("minute");
+  const options = [
+    "Never",
+    "10 Min",
+    "1 Hour",
+    "1 Day",
+    "3 Days",
+    "7 Days",
+    "Custom",
+  ];
+
+  const [selectedEveryOption, setSelectedEveryOption] = useState(options[0]);
 
   return (
     <div className="flex flex-col sm:flex-row w-full gap-2 sm:gap-2 h-full py-1">
@@ -34,15 +44,7 @@ const RateExpirySection: React.FC<RateExpirySectionProps> = ({
       <div className="w-full sm:flex-[2_2_30%]">
         <ReusableDropdown
           label="Expiry"
-          options={[
-            "Never",
-            "10 Min",
-            "1 Hour",
-            "1 Day",
-            "3 Days",
-            "7 Days",
-            "Custom",
-          ]}
+          options={options}
           selectedOption={selectedEveryOption}
           onSelect={(option) => setSelectedEveryOption(option)}
         />

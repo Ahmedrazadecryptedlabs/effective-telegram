@@ -14,7 +14,7 @@ interface LimitComponentProps {
   setBuyCurrency: (token: any) => void;
   sellAmount: number | undefined;
   setSellAmount: (amount: number | undefined) => void;
-  buyAmount: number;
+  buyAmount: number | undefined;
   quoteLoading: boolean;
   modalType: "sell" | "buy";
   setModalType: (type: "sell" | "buy") => void;
@@ -64,7 +64,7 @@ const LimitComponent: React.FC<LimitComponentProps> = ({
         modalType="sell"
         setModalType={setModalType}
         setModalOpen={setModalOpen}
-        showAmountSpan={false} // Explicitly false
+        showAmountSpan={true} // Explicitly false
         showWalletInfo={true} // Control whether to show wallet info
 
       />

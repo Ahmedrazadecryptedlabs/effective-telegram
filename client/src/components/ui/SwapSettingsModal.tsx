@@ -214,7 +214,7 @@ const SwapSettingsModal: React.FC<SwapSettingsModalProps> = ({
                       {["Priority Fee", "Jito Only", "Both"].map((mode) => (
                         <button
                           key={mode}
-                          className={`px-3 py-1 font-medium rounded-full text-sm border-4 border-[#1B1B1E] ${
+                          className={`px-2 py-1 font-medium rounded-full text-sm border-4 border-[#1B1B1E] ${
                             activeBroadcastMode === mode
                               ? "bg-cyan-500 text-[#0d1117]"
                               : "text-cyan-500"

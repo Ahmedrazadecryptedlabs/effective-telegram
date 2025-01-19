@@ -1,14 +1,14 @@
 // "use client";
 
 import { ExternalLink } from "lucide-react";
-import Image from "next/image";
-// import image1 from '../../../public/images/banaza.png'
+
 export default function CEXPage() {
   return (
     <div className="min-h-screen flex flex-col items-center px-6 py-8">
       {/* Header Text */}
-      <h1   className="text-center text-xss md:text-md font-semibold mb-6 text-gray-400">
-        Transfer assets to your Solana wallet from a Centralized Exchange (CEX) <br />
+      <h1 className="text-center text-xss md:text-md font-semibold mb-6 text-gray-400">
+        Transfer assets to your Solana wallet from a Centralized Exchange (CEX){" "}
+        <br />
         such as Binance, Coinbase, ByBit, or OKX.
       </h1>
 
@@ -18,22 +18,22 @@ export default function CEXPage() {
           {
             name: "BINANCE",
             url: "/images/binance_cex.svg",
-            link : "https://www.binance.com/en/support/faq/how-to-withdraw-crypto-from-binance-115003670492"
+            link: "https://www.binance.com/en/support/faq/how-to-withdraw-crypto-from-binance-115003670492",
           },
           {
             name: "coinbase",
             url: "/images/coinbase_cex.svg",
-            link : "https://help.coinbase.com/en-gb/coinbase/trading-and-funding/buying-selling-or-converting-crypto/how-do-i-sell-or-cash-out-my-digital-currency"
+            link: "https://help.coinbase.com/en-gb/coinbase/trading-and-funding/buying-selling-or-converting-crypto/how-do-i-sell-or-cash-out-my-digital-currency",
           },
           {
             name: "BYBIT",
             url: "/images/bybit.svg",
-            link : "https://www.bybit.com/en/help-center/article/How-to-submit-on-chain-withdrawal-request"
+            link: "https://www.bybit.com/en/help-center/article/How-to-submit-on-chain-withdrawal-request",
           },
           {
             name: "OKX",
             url: "/images/okx.svg",
-            link : "https://www.okx.com/help/how-do-i-make-a-withdrawal-app#on-chain-withdrawal"
+            link: "https://www.okx.com/help/how-do-i-make-a-withdrawal-app#on-chain-withdrawal",
           },
         ].map((item) => (
           <a
@@ -43,10 +43,11 @@ export default function CEXPage() {
             rel="noopener noreferrer"
             className="flex flex-col items-center justify-center px-[28px] py-3  bg-v2-background-dark text-white text-md font-medium rounded-lg shadow-md transition"
           >
-            <img  className="w-18 h-18" src={item.url} alt="" />
-          
+            <img className="w-18 h-18" src={item.url} alt="" />
+
             <div className="text-gray-400 flex items-center text-sm mt-4">
-              <span className="text-xs" >Read Guide</span> <ExternalLink  className="ml-1" size={"12px"} />
+              <span className="text-xs">Read Guide</span>{" "}
+              <ExternalLink className="ml-1" size={"12px"} />
             </div>
           </a>
         ))}
@@ -63,12 +64,14 @@ export default function CEXPage() {
             {
               step: 1,
               title: "Login to your CEX account",
-              description: "Login and ensure you have the asset you want to transfer.",
+              description:
+                "Login and ensure you have the asset you want to transfer.",
             },
             {
               step: 2,
               title: "Select 'Withdraw'",
-              description: "Click on the 'Withdraw' button next to your chosen asset.",
+              description:
+                "Click on the 'Withdraw' button next to your chosen asset.",
             },
             {
               step: 3,
@@ -107,11 +110,12 @@ export default function CEXPage() {
             {
               step: 9,
               title: "Check that assets arrived",
-              description: "Open your Solana wallet and check that your assets have arrived.",
+              description:
+                "Open your Solana wallet and check that your assets have arrived.",
             },
           ].map((item) => (
-            <li key={item.step} className="flex gap-4 items-start">
-              <div className="flex items-center justify-center w-5 h-5 text-xs font-bold text-cyan-400 bg-[#1A2B3E] rounded-full border border-cyan-400">
+            <li key={item.step} className="flex gap-3 items-start ">
+              <div className="flex items-center justify-center mt-1 w-5 h-5 text-xxs font-bold text-cyan-400 bg-[#1A2B3E] rounded-full border border-cyan-400">
                 {item.step}
               </div>
               <div className="flex-1">

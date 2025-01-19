@@ -237,7 +237,7 @@ export default function TradingViewChartCard({
           src={`https://www.tradingview.com/widgetembed/?frameElementId=tradingview_widget&symbol=NASDAQ:AAPL&interval=D&hidesidetoolbar=1&theme=dark&style=1&timezone=Etc/UTC&studies=[]&locale=en&utm_source=yourwebsite.com&utm_medium=widget&utm_campaign=chart&utm_term=NASDAQ:AAPL`}
           frameBorder="0"
           className="w-full !border-none"
-          style={{ height: "370px", minHeight: "300px" }}
+          style={{ height: "385px", minHeight: "300px" }}
         />
 
       </div>

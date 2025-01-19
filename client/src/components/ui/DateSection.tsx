@@ -34,7 +34,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({ label }) => {
 
       {/* Main Content */}
       {isStartNow ? (
-        <div className="flex justify-between items-stretch">
+        <div   className="flex justify-between items-start ">
           <span className="text-sm font-bold">Start Now</span>
           <button
             className="text-xs text-gray-400 underline hover:text-white"

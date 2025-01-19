@@ -16,6 +16,7 @@ const DayOrderSection: React.FC<RateExpirySectionProps> = ({
   onUseMarketClick,
 }) => {
   // State for managing selected option in ReusableDropdown
+  const options= ["minute", "hour", "day", "week", "month"]
   const [selectedOption, setSelectedOption] = useState("hour");
   const [inputValue, setInputValue] = useState("1");
   const [orderCount, setOrderCount] = useState("2");
@@ -24,7 +25,7 @@ const DayOrderSection: React.FC<RateExpirySectionProps> = ({
       <div className="w-full sm:flex-[2_2_50%]">
         <PriceRangeDropdown
           label="Every"
-          options={["minute", "hour", "day", "week", "month"]}
+          options={options}
           selectedOption={selectedOption}
           onSelect={setSelectedOption}
           inputValue={inputValue}
