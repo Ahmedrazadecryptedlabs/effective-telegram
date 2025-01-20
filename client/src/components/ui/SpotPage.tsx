@@ -499,7 +499,7 @@ export default function SpotTradeSection() {
 
   return (
     <div className="mt-12 p-0 sm:p-4">
-      <div className="flex flex-wrap justify-center lg:flex-nowrap w-full lg:w-4/5 gap-4 p-4 m-auto">
+      <div className="flex flex-wrap justify-center lg:flex-nowrap w-full lg:w-2/3 gap-4 p-4 m-auto">
         {/* Chart Section with Animation */}
         <AnimatePresence>
           {showChart && (
@@ -540,8 +540,8 @@ export default function SpotTradeSection() {
 
         {/* Tabs Section */}
         <motion.div
-          initial={{ width: showChart ? "32%" : "35%", opacity: 0 }}
-          animate={{ width: showChart ? "32%" : "35%", opacity: 1 }}
+          initial={{ width: showChart ? "33%" : "35%", opacity: 0 }}
+          animate={{ width: showChart ? "33%" : "35%", opacity: 1 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
           className="tabs-section w-full space-y-3 order-1 lg:order-none"
         >
