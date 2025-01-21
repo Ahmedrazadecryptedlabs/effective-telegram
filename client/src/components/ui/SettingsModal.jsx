@@ -172,7 +172,7 @@ export default function SettingsModal({ isOpen, onClose }) {
                 />
 
                 <button
-                  className="absolute right-2 bg-[#292A33] text-gray-500 px-3 py-1 rounded text-xs"
+                  className="absolute right-2 bg-[#292A33] text-gray-500 px-3 py-1  mt-3 rounded text-xs"
                   type="button"
                 >
                   Save
