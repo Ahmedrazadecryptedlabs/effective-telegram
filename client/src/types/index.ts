@@ -26,6 +26,17 @@ export interface Token {
 }
 
 
+ 
+export interface TabConfig {
+  /** Some tabs have headerTop, some do not—so make it optional. */
+  headerTop?: boolean;      
+  /** Some tabs have showCancelAll, some do not—so also make it optional. */
+  showCancelAll?: boolean;
+  /** A string for your extra data (e.g., "swap-specific-data"). */
+  additionalProp: string;
+  /** An array of objects with an id and a label. */
+  tabs: { id: string; label: string }[];
+}
 
 export type IconOption = {
   name: string;

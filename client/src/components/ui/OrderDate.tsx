@@ -15,12 +15,11 @@ const Orderdate: React.FC<RateExpirySectionProps> = ({
   approxValue,
   onUseMarketClick,
 }) => {
-  // State for managing selected option in ReusableDropdown
-
   const options = ["day", "hour", "minute", "week", "month"];
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const [inputValue, setInputValue] = useState("1");
   const [orderCount, setOrderCount] = useState("2");
+
   return (
     <div className="flex flex-col sm:flex-row w-full gap-2 sm:gap-2 h-full py-1">
       <div className="w-full sm:flex-[2_2_40%]">
@@ -38,6 +37,7 @@ const Orderdate: React.FC<RateExpirySectionProps> = ({
       <div className="w-full sm:flex-[2_2_80%]">
         <DatePickerComponent
           label="Select Date"
+          // Pass a callback that logs the selected date
           onDateChange={(date) => console.log("Selected Date:", date)}
         />
       </div>

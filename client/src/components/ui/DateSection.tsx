@@ -2,9 +2,17 @@ import React, { useState } from "react";
 
 interface DatePickerComponentProps {
   label: string;
+  /**
+   * Add an optional onDateChange prop to fix the TS error
+   * in Orderdate.tsx.
+   */
+  onDateChange?: (date: string) => void;
 }
 
-const DatePickerComponent: React.FC<DatePickerComponentProps> = ({ label }) => {
+const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
+  label,
+  onDateChange,
+}) => {
   const [isStartNow, setIsStartNow] = useState(true);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
@@ -18,7 +26,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({ label }) => {
   };
 
   return (
-    <div className="relative bg-[#131B24] text-white p-4 rounded-lg h-20  shadow-md w-full">
+    <div className="relative bg-[#131B24] text-white p-4 rounded-lg h-20 shadow-md w-full">
       {/* Label and Reset */}
       <div className="flex justify-between items-center mb-2">
         <span className="text-xs text-gray-400">{label}</span>
@@ -34,7 +42,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({ label }) => {
 
       {/* Main Content */}
       {isStartNow ? (
-        <div   className="flex justify-between items-start ">
+        <div className="flex justify-between items-start">
           <span className="text-sm font-bold">Start Now</span>
           <button
             className="text-xs text-gray-400 underline hover:text-white"
@@ -45,13 +53,16 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({ label }) => {
         </div>
       ) : (
         <div className="flex items-center justify-between">
-        <input
-        type="date"
-        value={selectedDate || ""}
-        onChange={(e) => setSelectedDate(e.target.value)}
-        className="bg-transparent text-sm font-bold text-white focus:outline-none w-full"
-      />
-         
+          <input
+            type="date"
+            value={selectedDate || ""}
+            onChange={(e) => {
+              setSelectedDate(e.target.value);
+              // Call the callback if provided
+              onDateChange?.(e.target.value);
+            }}
+            className="bg-transparent text-sm font-bold text-white focus:outline-none w-full"
+          />
         </div>
       )}
     </div>

@@ -33,8 +33,18 @@ import DCAComponent from "./dcaComponent";
 import VAComponent from "./VAComponent";
 import TradingViewChartCard from "./ApeProChartCard";
 import MiniTradingViewWidget from "./MiniTradingViewWidget";
+
+// Create Jupiter client
 const jupiterQuoteApi = createJupiterApiClient();
 const tabs = ["Swap", "Limit", "DCA", "VA"];
+
+/** Type for each tab's config */
+interface TabConfig {
+  headerTop?: boolean;
+  showCancelAll?: boolean;
+  additionalProp: string;
+  tabs: { id: string; label: string }[];
+}
 
 export default function SpotTradeSection() {
   const {
@@ -58,6 +68,7 @@ export default function SpotTradeSection() {
   const [buyCurrency, setBuyCurrency] = useState<Token | null>(
     initialBuyCurrency ?? null
   );
+
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"sell" | "buy">("sell");
   const [sellAmount, setSellAmount] = useState<number | undefined>(undefined);
@@ -69,13 +80,16 @@ export default function SpotTradeSection() {
   const [loadingSwap, setLoadingSwap] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
-  const [filteredTokenList, setFilteredTokenList] = useState<Token[]>([]); // Filtered tokens for display
+  const [filteredTokenList, setFilteredTokenList] = useState<Token[]>([]);
   const [searching, setSearching] = useState(false);
   const [activeTab, setActiveTab] = useState("Swap");
   const [showChart, setShowChart] = useState(true);
   const [showConnectWallet, setShowConnectWallet] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  /**
+   * 1) Jupiter Quote function
+   */
   const getJupiterQuote = async (
     fromToken: Token,
     toToken: Token,
@@ -86,7 +100,6 @@ export default function SpotTradeSection() {
       setBuyAmount(0);
       return null;
     }
-
     if (fromToken.address === toToken.address) {
       showToast({
         message: "Input and output tokens cannot be the same.",
@@ -95,7 +108,6 @@ export default function SpotTradeSection() {
       setBuyAmount(0);
       return null;
     }
-
     try {
       setQuoteLoading(true);
       const amount = Math.floor(_sellAmount * 10 ** fromToken.decimals);
@@ -129,12 +141,14 @@ export default function SpotTradeSection() {
     }
   };
 
+  /**
+   * 2) Execute Jupiter Swap
+   */
   const executeJupiterSwap = async () => {
     if (!connectedWalletPK || !signTransaction || !sendTransaction) {
       showToast({ message: "Please connect your wallet.", type: "error" });
       return;
     }
-
     try {
       setLoadingSwap(true);
 
@@ -197,6 +211,9 @@ export default function SpotTradeSection() {
     }
   };
 
+  /**
+   * 3) Handle swap error
+   */
   const handleJupiterSwapError = (error: any) => {
     if (error.message?.includes("User rejected the request")) {
       showToast({
@@ -223,10 +240,17 @@ export default function SpotTradeSection() {
     }
     console.error("Error executing Jupiter swap:", error);
   };
+
+  /**
+   * 4) Validate Solana Address
+   */
   const isValidSolanaAddress = (address: any) => {
     return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
   };
 
+  /**
+   * 5) If token list is ready, set initial tokens
+   */
   useEffect(() => {
     if (!tokenListLoading && tokenList.length > 0) {
       setSellCurrency(initialSellCurrency ?? null);
@@ -234,6 +258,9 @@ export default function SpotTradeSection() {
     }
   }, [tokenList, tokenListLoading]);
 
+  /**
+   * 6) Fetch token from external API, with localStorage guarded
+   */
   const fetchTokenFromAPI = async (query: any) => {
     try {
       const response = await fetch(`https://tokens.jup.ag/token/${query}`);
@@ -249,20 +276,22 @@ export default function SpotTradeSection() {
           isExternal: true,
         };
 
-        const berfore_storedTokens = JSON.parse(
-          localStorage.getItem("externalTokens") || "[]"
-        );
-
-        if (
-          !berfore_storedTokens.some(
-            (token: any) => token.address === simplifiedTokenData.address
-          )
-        ) {
-          berfore_storedTokens.push(simplifiedTokenData);
-          localStorage.setItem(
-            "externalTokens",
-            JSON.stringify(berfore_storedTokens)
+        /** Wrap localStorage calls in a check for window. */
+        if (typeof window !== "undefined") {
+          const before_storedTokens = JSON.parse(
+            window.localStorage.getItem("externalTokens") || "[]"
           );
+          if (
+            !before_storedTokens.some(
+              (token: any) => token.address === simplifiedTokenData.address
+            )
+          ) {
+            before_storedTokens.push(simplifiedTokenData);
+            window.localStorage.setItem(
+              "externalTokens",
+              JSON.stringify(before_storedTokens)
+            );
+          }
         }
       } else {
         showToast({
@@ -271,14 +300,92 @@ export default function SpotTradeSection() {
         });
       }
 
+      if (typeof window !== "undefined") {
+        const localTokens = JSON.parse(
+          window.localStorage.getItem("externalTokens") || "[]"
+        );
+        const combinedTokenList = [...localTokens, ...tokenList];
+        console.log(
+          "🚀 ~ fetchTokenFromAPI ~ combinedTokenList:",
+          combinedTokenList
+        );
+
+        const filteredTokens = combinedTokenList.filter(
+          (token) =>
+            token.address
+              .toLowerCase()
+              .includes(debouncedSearchQuery.toLowerCase()) ||
+            token.symbol
+              .toLowerCase()
+              .includes(debouncedSearchQuery.toLowerCase())
+        );
+
+        setFilteredTokenList(filteredTokens);
+      }
+    } catch (error) {
+      console.error("Error fetching token from external API:", error);
+      showToast({ message: `Failed to fetch token: ${error}`, type: "error" });
+    }
+  };
+
+  /**
+   * 7) Debounce sellAmount
+   */
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (sellAmount !== undefined && sellAmount > 0) {
+        setDebouncedSellAmount(sellAmount);
+      } else {
+        setDebouncedSellAmount(undefined);
+      }
+    }, 500);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [sellAmount]);
+
+  /**
+   * 8) Debounce searchQuery
+   */
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+      setSearching(false);
+    }, 500);
+
+    setSearching(true); // show searching state
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
+  /**
+   * 9) When debouncedSellAmount changes, fetch a Jupiter quote
+   */
+  useEffect(() => {
+    if (!sellCurrency || !buyCurrency || debouncedSellAmount === undefined) {
+      return;
+    }
+    getJupiterQuote(sellCurrency, buyCurrency, debouncedSellAmount);
+  }, [sellCurrency, buyCurrency, debouncedSellAmount]);
+
+  /**
+   * 10) Debounce the search query (again - possible duplication?)
+   */
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 500);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
+  /**
+   * 11) Filter tokens based on search, with localStorage guarded
+   */
+  useEffect(() => {
+    if (typeof window !== "undefined") {
       const localTokens = JSON.parse(
-        localStorage.getItem("externalTokens") || "[]"
+        window.localStorage.getItem("externalTokens") || "[]"
       );
       const combinedTokenList = [...localTokens, ...tokenList];
-      console.log(
-        "🚀 ~ fetchTokenFromAPI ~ combinedTokenList:",
-        combinedTokenList
-      );
 
       const filteredTokens = combinedTokenList.filter(
         (token) =>
@@ -291,80 +398,24 @@ export default function SpotTradeSection() {
       );
 
       setFilteredTokenList(filteredTokens);
-    } catch (error) {
-      console.error("Error fetching token from external API:", error);
-      showToast({ message: `Failed to fetch token: ${error}`, type: "error" });
-    }
-  };
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      if (sellAmount !== undefined && sellAmount > 0) {
-        setDebouncedSellAmount(sellAmount);
-      } else {
-        setDebouncedSellAmount(undefined);
-      }
-    }, 500);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [sellAmount]);
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearchQuery(searchQuery);
-      setSearching(false);
-    }, 500);
-
-    setSearching(true); // Show searching state immediately
-    return () => clearTimeout(handler);
-  }, [searchQuery]);
-
-  useEffect(() => {
-    if (!sellCurrency || !buyCurrency || debouncedSellAmount === undefined) {
-      return;
-    }
-    getJupiterQuote(sellCurrency, buyCurrency, debouncedSellAmount);
-  }, [sellCurrency, buyCurrency, debouncedSellAmount]);
-
-  // Debounce the search query with 0.5s delay
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearchQuery(searchQuery);
-    }, 500);
-    return () => clearTimeout(handler);
-  }, [searchQuery]);
-
-  // Filtered token list based on the debounced search query
-  useEffect(() => {
-    const localTokens = JSON.parse(
-      localStorage.getItem("externalTokens") || "[]"
-    );
-    const combinedTokenList = [...localTokens, ...tokenList];
-
-    const filteredTokens = combinedTokenList.filter(
-      (token) =>
-        token.address
-          .toLowerCase()
-          .includes(debouncedSearchQuery.toLowerCase()) ||
-        token.symbol.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
-    );
-
-    setFilteredTokenList(filteredTokens);
-
-    // Fetch from external API if no match is found
-    if (filteredTokens.length === 0 && debouncedSearchQuery) {
-      if (isValidSolanaAddress(debouncedSearchQuery)) {
-        fetchTokenFromAPI(debouncedSearchQuery);
-      } else {
-        showToast({
-          message: "Invalid token address. Please check your input.",
-          type: "error",
-        });
+      // If no match, and user typed something
+      if (filteredTokens.length === 0 && debouncedSearchQuery) {
+        if (isValidSolanaAddress(debouncedSearchQuery)) {
+          fetchTokenFromAPI(debouncedSearchQuery);
+        } else {
+          showToast({
+            message: "Invalid token address. Please check your input.",
+            type: "error",
+          });
+        }
       }
     }
   }, [debouncedSearchQuery, tokenList]);
 
+  /**
+   * 12) Handle token selection from the modal
+   */
   const handleTokenSelection = (token: Token) => {
     if (modalType === "sell") {
       setSellCurrency(token);
@@ -372,9 +423,12 @@ export default function SpotTradeSection() {
       setBuyCurrency(token);
     }
     setModalOpen(false);
-    setSearchQuery(""); // Reset search query
+    setSearchQuery(""); // reset search
   };
 
+  /**
+   * 13) Render content for each tab
+   */
   const renderTabContent = () => {
     switch (activeTab) {
       case "Swap":
@@ -462,7 +516,10 @@ export default function SpotTradeSection() {
     }
   };
 
-  const tabStates = {
+  /**
+   * 14) Define tab states with index signature
+   */
+  const tabStates: { [key: string]: TabConfig } = {
     Swap: {
       showCancelAll: false,
       additionalProp: "swap-specific-data",
@@ -497,6 +554,9 @@ export default function SpotTradeSection() {
     },
   };
 
+  /**
+   * 15) Return the main UI
+   */
   return (
     <div className="mt-12 p-0 sm:p-4">
       <div className="flex flex-wrap justify-center lg:flex-nowrap w-full lg:w-2/3 gap-4 p-4 m-auto">
@@ -509,7 +569,7 @@ export default function SpotTradeSection() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
-              className={`chart-section w-full lg:w-[65%] order-2 lg:order-none`}
+              className="chart-section w-full lg:w-[65%] order-2 lg:order-none"
             >
               <div className="bg-gray-900 rounded-2xl order-2 overflow-hidden hidden md:block">
                 <TradingViewChartCard
@@ -527,11 +587,18 @@ export default function SpotTradeSection() {
                   transition={{ duration: 0.4, ease: "easeOut" }}
                   className="transition-opacity order-4 lg:order-none"
                 >
-                  <ConnectWalletSection
-                    tabs={tabStates[activeTab]?.tabs || []}
-                    defaultActiveTab={tabStates[activeTab]?.tabs?.[0]?.id || ""}
-                    {...(tabStates[activeTab] || {})}
-                  />
+                  {(() => {
+                    const { tabs: _, ...rest } = tabStates[activeTab] || {};
+                    return (
+                      <ConnectWalletSection
+                        tabs={tabStates[activeTab]?.tabs || []}
+                        defaultActiveTab={
+                          tabStates[activeTab]?.tabs?.[0]?.id || ""
+                        }
+                        {...rest}
+                      />
+                    );
+                  })()}
                 </motion.div>
               )}
             </motion.div>
@@ -548,7 +615,7 @@ export default function SpotTradeSection() {
           <div className="flex md:flex-row items-center justify-between rounded-full w-full">
             <div
               className={`flex items-center px-1 space-x-1 justify-evenly bg-[#192230] rounded-full py-1 ${
-                showChart ? "w-full" : " w-full !mr-12"
+                showChart ? "w-full" : "w-full !mr-12"
               }`}
             >
               {tabs.map((tab) => (
@@ -599,7 +666,7 @@ export default function SpotTradeSection() {
           </div>
 
           {showChart && (
-            <div className="bg-gray-900 rounded-2xl order-2 overflow-hidden block  md:hidden">
+            <div className="bg-gray-900 rounded-2xl order-2 overflow-hidden block md:hidden">
               <TradingViewChartCard
                 baseToken={sellCurrency}
                 quoteToken={buyCurrency}
@@ -613,7 +680,6 @@ export default function SpotTradeSection() {
           {!showChart && (
             <div className="order-5 lg:order-none">
               <MiniTradingViewWidget />
-
               <AnimatePresence>
                 {showConnectWallet && (
                   <motion.div
@@ -623,13 +689,18 @@ export default function SpotTradeSection() {
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.4, ease: "easeOut" }}
                   >
-                    <ConnectWalletSection
-                      tabs={tabStates[activeTab]?.tabs || []}
-                      defaultActiveTab={
-                        tabStates[activeTab]?.tabs?.[0]?.id || ""
-                      }
-                      {...(tabStates[activeTab] || {})}
-                    />
+                    {(() => {
+                      const { tabs: _, ...rest } = tabStates[activeTab] || {};
+                      return (
+                        <ConnectWalletSection
+                          tabs={tabStates[activeTab]?.tabs || []}
+                          defaultActiveTab={
+                            tabStates[activeTab]?.tabs?.[0]?.id || ""
+                          }
+                          {...rest}
+                        />
+                      );
+                    })()}
                   </motion.div>
                 )}
               </AnimatePresence>

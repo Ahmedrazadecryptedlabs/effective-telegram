@@ -3,13 +3,6 @@ import React, { useEffect, useState } from "react";
 import { BadgeCheck, Search } from "lucide-react";
 import { Token } from "@/types"; // <-- use your real Token interface here
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  tokenList: Token[];
-  onTokenSelect?: (selectedToken: Token) => void;
-}
-
 /** Hard-coded popular tokens matching your `Token` shape */
 const popularTokens = [
   {
@@ -58,6 +51,12 @@ function shortenAddress(address: string): string {
   return `${start}...${end}`;
 }
 
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  tokenList: Token[];
+  onTokenSelect?: (selectedToken: Token) => void;
+}
 
 const Modal: React.FC<ModalProps> = ({
   isOpen,
@@ -81,9 +80,7 @@ const Modal: React.FC<ModalProps> = ({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
-
-  // Search filter
+  // Search filter (moved above the conditional return to avoid calling hooks conditionally)
   useEffect(() => {
     if (!searchQuery) {
       setFilteredTokens(tokenList);
@@ -99,6 +96,8 @@ const Modal: React.FC<ModalProps> = ({
       );
     }
   }, [searchQuery, tokenList]);
+
+  if (!isOpen) return null;
 
   // Overlays should close the modal
   const handleOverlayClick = () => onClose();
@@ -191,7 +190,11 @@ const Modal: React.FC<ModalProps> = ({
               className={`
                 flex items-center
                 rounded-full
-                ${i < 3 ? "justify-center w-[42px] h-[32px]" : "gap-2 px-3 py-1.5"}
+                ${
+                  i < 3
+                    ? "justify-center w-[42px] h-[32px]"
+                    : "gap-2 px-3 py-1.5"
+                }
                 transition
               `}
             >
@@ -208,7 +211,7 @@ const Modal: React.FC<ModalProps> = ({
         </div>
 
         {/* Scrollable token list */}
-        <div className="flex-1 overflow-y-auto  custom-scrollbar">
+        <div className="flex-1 overflow-y-auto custom-scrollbar">
           {filteredTokens.map((token) => (
             <button
               key={token.address}
@@ -225,13 +228,20 @@ const Modal: React.FC<ModalProps> = ({
                 transition
               "
             >
-              {/* If you have real images, use token.logoURI. */}
-              {/* <div className="w-8 h-8 bg-gray-500 rounded-full mr-3 flex-shrink-0" /> */}
-              <img  className='w-8 h-8 rounded-2xl mx-2' src={token.logoURI} />
+              <img
+                className="w-8 h-8 rounded-2xl mx-2"
+                src={token.logoURI}
+                alt={token.symbol}
+              />
               <div className="flex-1 flex flex-col mx-1">
-                <span className="text-sm font-bold flex items-center"><span className="mr-2" >{token.symbol} </span><BadgeCheck className="text-primary w-4 h-4"   /></span>
+                <span className="text-sm font-bold flex items-center">
+                  <span className="mr-2">{token.symbol}</span>
+                  <BadgeCheck className="text-primary w-4 h-4" />
+                </span>
                 <span className="text-xs text-gray-300">{token.name}</span>
-                <span className="text-xxs text-gray-500 ">  {shortenAddress(token.address)}</span>
+                <span className="text-xxs text-gray-500">
+                  {shortenAddress(token.address)}
+                </span>
               </div>
 
               {token.extraBadge && (

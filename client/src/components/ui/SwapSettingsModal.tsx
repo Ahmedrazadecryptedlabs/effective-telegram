@@ -13,13 +13,18 @@ const SwapSettingsModal: React.FC<SwapSettingsModalProps> = ({
   onClose,
 }) => {
   const [isAdvancedSettingsOpen, setIsAdvancedSettingsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"Enable" | "Disable">("Disable"); // Default to "Disable"
+
+  /**
+   * Fix: expand activeTab's type so it can hold "Enable", "Disable", "Dynamic", *and* "Fixed".
+   * This way, we can re-use the same state variable for both "Enable/Disable" and "Dynamic/Fixed".
+   */
+  const [activeTab, setActiveTab] = useState<"Enable" | "Disable" | "Dynamic" | "Fixed">("Disable");
+
   const [activeBroadcastMode, setActiveBroadcastMode] = useState<
     "Priority Fee" | "Jito Only" | "Both"
   >("Both");
-  const [activeFeeMode, setActiveFeeMode] = useState<"Max Cap" | "Exact Fee">(
-    "Exact Fee"
-  );
+
+  const [activeFeeMode, setActiveFeeMode] = useState<"Max Cap" | "Exact Fee">("Exact Fee");
   const [slippageValue, setSlippageValue] = useState<number>(2);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [exactFee, setExactFee] = useState<number>(0.004);
@@ -43,9 +48,7 @@ const SwapSettingsModal: React.FC<SwapSettingsModalProps> = ({
           <div className="flex gap-2 bg-[#18222D] rounded-full py-1 px-1">
             <button
               className={`px-4 py-1 text-sm font-bold rounded-full ${
-                selectedMode === "Auto"
-                  ? "bg-cyan-900 text-white"
-                  : "text-gray-400"
+                selectedMode === "Auto" ? "bg-cyan-900 text-white" : "text-gray-400"
               }`}
               onClick={() => handleModeChange("Auto")}
             >
@@ -53,9 +56,7 @@ const SwapSettingsModal: React.FC<SwapSettingsModalProps> = ({
             </button>
             <button
               className={`px-4 py-1 text-sm font-bold rounded-full ${
-                selectedMode === "Manual"
-                  ? "bg-cyan-900 text-white"
-                  : "text-gray-400"
+                selectedMode === "Manual" ? "bg-cyan-900 text-white" : "text-gray-400"
               }`}
               onClick={() => handleModeChange("Manual")}
             >
@@ -219,7 +220,7 @@ const SwapSettingsModal: React.FC<SwapSettingsModalProps> = ({
                               ? "bg-cyan-500 text-[#0d1117]"
                               : "text-cyan-500"
                           }`}
-                          onClick={() => setActiveBroadcastMode(mode)}
+                          onClick={() => setActiveBroadcastMode(mode as typeof activeBroadcastMode)}
                         >
                           {mode}
                         </button>
@@ -248,7 +249,7 @@ const SwapSettingsModal: React.FC<SwapSettingsModalProps> = ({
                               ? "bg-cyan-500 text-[#0d1117]"
                               : "text-cyan-500"
                           }`}
-                          onClick={() => setActiveFeeMode(mode)}
+                          onClick={() => setActiveFeeMode(mode as typeof activeFeeMode)}
                         >
                           {mode}
                         </button>
@@ -268,17 +269,13 @@ const SwapSettingsModal: React.FC<SwapSettingsModalProps> = ({
                       <input
                         type="number"
                         value={exactFee}
-                        onChange={(e) =>
-                          setExactFee(parseFloat(e.target.value))
-                        }
+                        onChange={(e) => setExactFee(parseFloat(e.target.value))}
                         className="bg-transparent border-none w-36 text-right outline-none text-white"
                       />
                       <span>SOL</span>
                     </div>
                   </div>
-                  <p className="text-gray-500 text-xs mt-1 text-right">
-                    ~$0.77
-                  </p>
+                  <p className="text-gray-500 text-xs mt-1 text-right">~$0.77</p>
                 </div>
               </div>
 
@@ -288,9 +285,7 @@ const SwapSettingsModal: React.FC<SwapSettingsModalProps> = ({
                   className="flex justify-between items-center cursor-pointer border-b border-gray-700 pb-2"
                   onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
                 >
-                  <h3 className="text-white font-bold text-lg">
-                    Advanced Settings
-                  </h3>
+                  <h3 className="text-white font-bold text-lg">Advanced Settings</h3>
                   {isAdvancedOpen ? (
                     <ChevronUp size={16} className="text-gray-400" />
                   ) : (
@@ -314,9 +309,7 @@ const SwapSettingsModal: React.FC<SwapSettingsModalProps> = ({
                       >
                         <div
                           className={`w-4 h-4 bg-white rounded-full shadow transform transition-transform ${
-                            isUseWSolEnabled
-                              ? "translate-x-5"
-                              : "translate-x-1"
+                            isUseWSolEnabled ? "translate-x-5" : "translate-x-1"
                           }`}
                         ></div>
                       </div>
@@ -329,23 +322,17 @@ const SwapSettingsModal: React.FC<SwapSettingsModalProps> = ({
                           <Info size={14} />
                           <span className="font-medium">AMM Exclusion</span>
                         </div>
-                        <p className="text-xs text-gray-500">
-                          No amms are being excluded.
-                        </p>
+                        <p className="text-xs text-gray-500">No amms are being excluded.</p>
                       </div>
                       <div
                         className={`relative w-10 h-5 flex items-center rounded-full cursor-pointer ${
-                          isAMMExclusionEnabled
-                            ? "bg-cyan-500"
-                            : "bg-gray-700"
+                          isAMMExclusionEnabled ? "bg-cyan-500" : "bg-gray-700"
                         }`}
                         onClick={toggleAMMExclusion}
                       >
                         <div
                           className={`w-4 h-4 bg-white rounded-full shadow transform transition-transform ${
-                            isAMMExclusionEnabled
-                              ? "translate-x-5"
-                              : "translate-x-1"
+                            isAMMExclusionEnabled ? "translate-x-5" : "translate-x-1"
                           }`}
                         ></div>
                       </div>

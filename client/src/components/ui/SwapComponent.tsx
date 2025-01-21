@@ -9,6 +9,15 @@ import { ReusableButton } from "./connect_wallet_btn";
 import WalletModal from "./WalletConnectModal";
 import { useWallet } from "@solana/wallet-adapter-react";
 
+/**
+ * 1. Define the missing WalletOption interface so TypeScript knows the shape of each wallet.
+ */
+interface WalletOption {
+  name: string;
+  id: string;
+  icon: string;
+}
+
 interface SwapComponentProps {
   tokenListLoading: boolean;
   sellCurrency: any;
@@ -44,16 +53,20 @@ const SwapComponent: React.FC<SwapComponentProps> = ({
   executeJupiterSwap,
   loadingSwap,
 }) => {
-
   const [isModalOpen, setIsModalOpen] = useState(false);
-    const { publicKey, connect } = useWallet();
+  const { publicKey, connect } = useWallet();
   const [isWalletModalOpen, setWalletModalOpen] = useState(false);
   const [isSettingsModalOpen, setSettingsModalOpen] = useState(false);
   const [connectingWallet, setConnectingWallet] = useState<string | null>(null);
   const [connectionError, setConnectionError] = useState<string | null>(null);
+
   const handleOpenModal = () => {
     setWalletModalOpen(true);
   };
+
+  /**
+   * 2. Use the new WalletOption interface:
+   */
   const wallets: WalletOption[] = [
     { name: "Phantom", id: "phantom", icon: "/images/phantom.svg" },
     { name: "Solflare", id: "solflare", icon: "/images/solflare.svg" },
@@ -74,6 +87,7 @@ const SwapComponent: React.FC<SwapComponentProps> = ({
     { name: "Bitget Wallet", id: "bitget", icon: "/images/bitget.png" },
     { name: "Frontier", id: "frontier", icon: "/images/frontier.svg" },
   ];
+
   const handleConnect = async (walletId: string) => {
     try {
       setConnectingWallet(walletId);
@@ -87,6 +101,7 @@ const SwapComponent: React.FC<SwapComponentProps> = ({
       setConnectingWallet(null);
     }
   };
+
   return (
     <div className="space-y-2">
       <SettingsToggle />
@@ -131,12 +146,12 @@ const SwapComponent: React.FC<SwapComponentProps> = ({
         onClick={handleOpenModal}
         marginTop="mt-4" // Optional margin top if needed
       />
-       <WalletModal
-      isOpen={isWalletModalOpen}
-      onClose={() => setWalletModalOpen(false)}
-      wallets={wallets}
-      handleConnect={handleConnect}
-    />
+      <WalletModal
+        isOpen={isWalletModalOpen}
+        onClose={() => setWalletModalOpen(false)}
+        wallets={wallets}
+        handleConnect={handleConnect}
+      />
       {/* Modal component */}
     </div>
   );

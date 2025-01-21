@@ -10,13 +10,22 @@ import {
   SheetTrigger,
 } from "@/components/ui/Sheet";
 
+/**
+ * Here is the minimal type adjustment:
+ *
+ * 1. The `WalletOptionProps` interface is now just the shape of each wallet item
+ *    **without** `handleConnect`.
+ * 2. We keep `handleConnect` as a separate prop in `WalletModalProps`.
+ */
+
+/* Each wallet in the array: */
 interface WalletOptionProps {
   name: string;
   id: string;
   icon: string;
-  handleConnect: (walletId: string) => void;
 }
 
+/* Full modal props: arrays of wallet items + a connect function. */
 interface WalletModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -24,7 +33,13 @@ interface WalletModalProps {
   handleConnect: (walletId: string) => void;
 }
 
-const WalletOption: React.FC<WalletOptionProps> = ({
+/* Props for the individual WalletOption component:
+   We'll pass handleConnect separately. */
+interface WalletOptionComponentProps extends WalletOptionProps {
+  handleConnect: (walletId: string) => void;
+}
+
+const WalletOption: React.FC<WalletOptionComponentProps> = ({
   icon,
   name,
   id,
@@ -60,7 +75,7 @@ const WalletModal: React.FC<WalletModalProps> = ({
         side="right"
         className="w-full sm:max-w-[550px] bg-[#283747] border-l border-gray-800 px-4"
       >
-        <div className="flex flex-col justify-start sm:items-start  text-start">
+        <div className="flex flex-col justify-start sm:items-start text-start">
           <SheetHeader className="text-white !space-y-0 flex flex-col sm:items-start">
             <SheetTitle className="text-white text-2xl font-bold">
               Connect Wallet
